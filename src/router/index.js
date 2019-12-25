@@ -11,8 +11,23 @@ const routes = [{
     {
         path: "/login",
         component: () =>
-            import ('../views/login.vue')
-    }
+            import ('../views/login.vue'),
+        children: [{
+                path: 'system',
+                components: {
+                    jump: () =>
+                        import ('../views/system.vue')
+                }
+            },
+            {
+                path: 'registry',
+                components: {
+                    jump: () =>
+                        import ('../views/registry.vue')
+                }
+            }
+        ]
+    },
 ]
 
 const router = new VueRouter({
