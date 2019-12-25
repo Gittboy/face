@@ -15,7 +15,7 @@
             <lock3 />
         </div>
         <ul id="navs_wrap">
-            <li class="nav_item" v-for="(item, index) in links" :key="index" @click="changeTab">
+            <li class="nav_item" v-for="(item, index) in links" :key="index" :data-index="index" @click.capture="changeTab($event)">
                 <span :class="{text_item: 1, text_item_active: index==selected}">
                     {{item.text}}
                 </span>
@@ -52,8 +52,9 @@ export default {
         }
     },
     methods: {
-        changeTab(){
-            this.selected = this.key
+        changeTab(event){
+            console.log(event.currentTarget.dataIndex);
+            this.selected = event.currentTarget.dataset.index
         }
     }
     
@@ -79,6 +80,10 @@ export default {
             justify-content: space-around;
             width: 100%;
             padding-block-start: 0;
+            padding: 0;
+            background-color: lightgray;
+            margin-bottom: 0;
+            padding-bottom: 5px;
             .text_item{
                 display: inline-block;
                 font-size: 16px;
