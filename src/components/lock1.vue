@@ -1,7 +1,9 @@
 <template>
     <div id="templock">
         <div class="temp_content">
-            <input type="text" id="lock_num" v-model="lock_num" @change="handleChange($event)" minlength="4" maxlength="4"></br>
+            <mt-badge size="large" type="warning">{{lock_num}}</mt-badge>
+            <!-- <input type="text" id="lock_num" v-model="lock_num" minlength="4" maxlength="4" readonly> -->
+            </br>
             <mt-button type='primary' id="pwd_gen">生成开锁码</mt-button>
         </div>
     </div>
@@ -11,14 +13,7 @@
 export default {
     data(){
         return {
-            data_num: "",
-        }
-    },
-    methods: {
-        handleChange(event){
-            if(data_num.length>4){
-                event.preventDefault();
-            }
+            lock_num: '10086',
         }
     }
 }
@@ -47,6 +42,16 @@ export default {
             }
             #pwd_gen{
                 margin-top: 10vh;
+            }
+            .mint-badge.is-size-large{
+                text-align: center;
+                font-size: 30px;
+                line-height: 30px;
+                letter-spacing: 10px;
+                padding: 10px 20px;
+                font-weight: bold;
+                min-width: 130px;
+                min-height: 30px;
             }
         }
     }

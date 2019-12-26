@@ -1,19 +1,23 @@
 <template>
     <div id="system">
-        <mt-header title="临时开锁码">
-            <router-link to="/login" slot="left">
+        <div style="position: relative">
+            <mt-header :title="links[selected].title?links[selected].title:links[selected].text">
+            <!-- <router-link to="/login" slot="left">
                 <mt-button icon="back">返回</mt-button>
-            </router-link>
-        </mt-header>
-        <div v-show="selected==0">
-            <lock1 />
+            </router-link> -->
+            </mt-header>
+            <div v-show="selected==0">
+                <lock1 />
+            </div>
+            <div v-show="selected==1">
+                <lock2 />
+            </div>
+            <div v-show="selected==2">
+                <lock3 />
+            </div>
+            <router-view name="setting"></router-view> 
         </div>
-        <div v-show="selected==1">
-            <lock2 />
-        </div>
-        <div v-show="selected==2">
-            <lock3 />
-        </div>
+        
         <ul id="navs_wrap">
             <li class="nav_item" v-for="(item, index) in links" :key="index" :data-index="index" @click.capture="changeTab($event)">
                 <span :class="{text_item: 1, text_item_active: index==selected}">
@@ -39,13 +43,14 @@ export default {
             selected: 0,
             links: [
                 {
-                    text: '开锁码生成'
+                    text: '开锁码生成',
+                    title: '临时开锁码'
                 },
                 {
-                    text: '远程开锁'
+                    text: '远程开锁',
                 },
                 {
-                    text: '个人信息'
+                    text: '个人信息',
                 },
 
             ]
@@ -53,7 +58,6 @@ export default {
     },
     methods: {
         changeTab(event){
-            console.log(event.currentTarget.dataIndex);
             this.selected = event.currentTarget.dataset.index
         }
     }
@@ -81,7 +85,7 @@ export default {
             width: 100%;
             padding-block-start: 0;
             padding: 0;
-            background-color: lightgray;
+            background-color: #ccc;
             margin-bottom: 0;
             padding-bottom: 5px;
             .text_item{

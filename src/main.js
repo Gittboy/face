@@ -8,9 +8,18 @@ import mint from 'mint-ui'
 import 'mint-ui/lib/style.css'
 Vue.use(mint)
 
+import axios from 'axios'
+Vue.prototype.http = axios
+
+import jq from 'jquery'
+
+import { checkRes } from './common/public/pubMethod.js'
+Vue.prototype.checkRes = checkRes
+
 // import vant from 'vant-ui'
 // import 'vant-ui/lib'
 // Vue.use(vant)
+// import './common/public/style.css'
 
 Vue.config.productionTip = false
 

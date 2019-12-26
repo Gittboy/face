@@ -18,23 +18,48 @@
         </div> -->
         <div class="login_wrap">
             <mt-field placeholder="请输入开锁码" id="field_id" v-model="tempid"></mt-field>
-            <mt-button type="primary" class="mybtn">临时开锁</mt-button>
+            <mt-button type="primary" class="mybtn" @click="tempopen">临时开锁</mt-button>
             <nav class="navs">
-                <router-link to="login/system" class="left">进入系统</router-link>
+                <!-- <router-link to="login/system" class="left">进入系统</router-link> -->
                 <router-link to="login/registry" class="right">用户注册</router-link>
             </nav>
-            <router-view name="jump"></router-view>
         </div>
     </div>
 </template>
 
 <script>
+import {Toast} from 'mint-ui'
 export default {
     data(){
         return {
             tempid: "",
             links: [
             ]
+        }
+    },
+    methods: {
+        tempopen(){
+            this.http.get(`/v1/api/terminal/openlock/code?user_id=${user_id}&community_id=${community_id}&salt=randomsalt&token=${token}&identity=${token}`).then(res=>{
+                if(res.data.code!=1){
+                    Toast(res.data.reason)
+                }else{
+                    Toast('开锁成功')
+                }
+            }, err=>{
+                Toast({
+                    message: err,
+                    // icon font 的class名
+                    // icon图表类  icon- 具体的图标类型
+                    iconClass: 'icon icon-success'  
+                })
+            })
+        }
+        
+    },
+    created(){
+        console.log(this.$store.state.token);
+        if(this.$store.state.token){
+            this.$router.replace('/system')
         }
     }
 }

@@ -1,5 +1,5 @@
 <template>
-    <div id="registry">
+    <div id="registry" class="new_page">
         <mt-header title="">
             <router-link to="/login" slot="left">
                 <mt-button icon="back">返回</mt-button>
@@ -10,40 +10,80 @@
         <div class="field_wrap">
             <div class="id_wrap">
                 <label for="inp_id">手机号：</label>
-                <input type="text" id="inp_id" class="myinput">
+                <input type="text" id="inp_id"  v-model="phone" class="myinput">
             </div>
             <div class="pwd_wrap">
                 <label for="inp_pwd">验证码：</label>
-                <input type="text" id="inp_pwd" class="myinput">
-                <mt-button type="default" size="small" id="get_pwd">获取验证码</mt-button>
+                <input type="text" id="inp_pwd" v-model="captcha_code" class="myinput">
+                <mt-button type="default" size="small" id="get_pwd" @click="getVerification">{{text}}</mt-button>
             </div>
-            <mt-button type="primary" class="mybtn">提交并完善信息</mt-button>
+            <mt-button type="primary" class="mybtn" @click="submit">提交并完善信息</mt-button>
         </div>
-
+        <router-view name=""></router-view>
     </div>
 </template>
 
 <script>
 export default {
-    
+    data(){
+        return {
+            timer: null,
+            counter: 59,
+            text: '获取验证码',
+            phone: '',
+            captcha_code: '',
+        }
+    },
+    methods: {
+        getVerification(){
+            let _this = this;
+            if(this.timer){
+                return ;
+            } else {
+                this.timer = setInterval(function(){
+                    _this.text = _this.counter + "秒后刷新";
+                    _this.counter--;
+                    if(_this.counter==0){
+                        clearInterval(_this.timer);
+                        _this.timer = null;
+                        _this.counter==59;
+                        _this.text = '获取验证码';
+                    }
+                }, 1000)
+            }
+        },
+        submit(){
+            if(this.phone && this.captcha_code){
+                this.http.post(`/v1/api/terminal/community/signin?user_id=xxxx&salt=randomsalt&token=hasedtoken&identity=identity`, 
+                {
+                    "phone": this.phone_num,
+                    "captcha_code": this.captcha_code
+                }).then(res=>{
+                    this.checkRes(res.data, Toast, '登录成功')
+                })
+
+            } 
+            
+        }
+    }
 }
 </script>
 
 <style lang="less" scope>
     #registry{
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        min-height: 100%;
-        background-color: #fff;
+        // position: fixed;
+        // top: 0;
+        // left: 0;
+        // width: 100%;
+        // min-height: 100%;
+        // background-color: #fff;
         .mint-header{
             // display: block;
             width: 100%;
             padding: 0 5%;
         }
         .field_wrap{
-            margin-top: 10vh;
+            margin-top: 20vh;
             padding: 0 10vw;
             .id_wrap{
                 display: flex;
@@ -71,7 +111,7 @@ export default {
         }
         .mybtn{
             width: 100%;
-            margin-top: 50px;
+            margin-top: 10vh;
         }
     }
     

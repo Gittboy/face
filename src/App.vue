@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <router-view></router-view>
+    <router-view name="jump"></router-view>
   </div>
 </template>
 
@@ -11,6 +12,7 @@ export default {
 </script>
 
 <style lang="less">
+@import './common/public/style.less';
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

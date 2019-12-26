@@ -6,27 +6,41 @@ Vue.use(VueRouter)
 const routes = [{
         path: "/",
         name: "login",
-        redirect: "/login"
+        redirect: "/index"
     },
     {
-        path: "/login",
+        path: "/index",
         component: () =>
-            import ('../views/login.vue'),
+            import ('../views/index.vue'),
         children: [{
-                path: 'system',
-                components: {
-                    jump: () =>
-                        import ('../views/system.vue')
-                }
-            },
-            {
                 path: 'registry',
                 components: {
                     jump: () =>
                         import ('../views/registry.vue')
                 }
+            },
+            {
+                path: 'setting',
+                components: {
+                    setting: () =>
+                        import ('../views/setting.vue')
+                }
             }
         ]
+    },
+    {
+        path: '/system',
+        components: {
+            jump: () =>
+                import ('../views/system.vue')
+        },
+        children: [{
+            path: 'setting',
+            components: {
+                setting: () =>
+                    import ('../views/setting.vue')
+            }
+        }]
     },
 ]
 
