@@ -18,7 +18,8 @@
                 <!-- 用户获取后输入的验证码  captcha_code 字段 -->
                 <input type="text" id="inp_pwd" v-model="captcha_code" class="myinput">
                 <!-- 获取验证码按钮，点击60s后重新获取验证码 getVerification 方法 -->
-                <mt-button type="default" size="small" id="get_pwd" @click="getVerification">{{text}}</mt-button>
+                <!-- <mt-button type="default" size="small" id="get_pwd" @click="getVerification">{{text}}</mt-button> -->
+                <button id="get_pwd" @click="getVerification">{{text}}</button>
             </div>
             <!-- 提交手机号和验证码验证登录信息 submit 方法 -->
             <mt-button type="primary" class="mybtn" @click="submit">提交并完善信息</mt-button>
@@ -51,7 +52,7 @@ export default {
                     if(_this.counter==0){
                         clearInterval(_this.timer);
                         _this.timer = null;
-                        _this.counter==59;
+                        _this.counter=59;
                         _this.text = '获取验证码';
                     }
                 }, 1000)
@@ -101,6 +102,15 @@ export default {
                 #get_pwd{
                     height: 24px;
                     margin-left: 5px;
+                    min-width: 70px;
+                    box-sizing: content-box;
+                    text-align: center;
+                    line-height: 24px;
+                    color: #fff;
+                    background-color: #07C160;
+                    border: none;
+                    outline: none;
+                    border-radius: 4px;
                 }
                 .mint-button-text{
                     font-size: 16px;

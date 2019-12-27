@@ -14,12 +14,17 @@
             <mt-field label="楼号" placeholder="请输入楼号" type="text" v-model="house_num"></mt-field>
             <mt-field label="单元号" placeholder="请输入单元号" type="number" v-model="unit_num"></mt-field>
             <mt-field label="门牌号" placeholder="请输入门牌号" type="number" v-model="gate_num"></mt-field>
+            <van-picker :columns="columns" @change="onChange" />
         </div>
         <mt-button type="primary" size="large">提交审核</mt-button>
     </div>
 </template>
 
 <script>
+import Vue from 'vue';
+import { Picker } from 'vant';
+Vue.use(Picker);
+import 'vant/lib/picker/style';
 export default {
     data(){
         return {
@@ -29,7 +34,27 @@ export default {
             name: "",
             house_num: "",
             unit_num: "",
-            gate_num: ""
+            gate_num: "",
+            citys: {
+                '浙江': ['杭州', '宁波', '温州', '嘉兴', '湖州'],
+                '福建': ['福州', '厦门', '莆田', '三明', '泉州']
+            },
+            
+        }
+    },
+    computed: {
+        columns() {
+            return [
+                {
+                    values: Object.keys(this.citys),
+                    className: 'column1'
+                },
+                {
+                    values: this.citys['浙江'],
+                    className: 'column2',
+                    defaultIndex: 2
+                }
+            ]
         }
     },
     methods: {
@@ -45,6 +70,9 @@ export default {
                 var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
                 }
             });
+        },
+        onChange(){
+            console.log('ok');
         }
     }
 }
@@ -72,10 +100,13 @@ export default {
             }
             .avatar_upload{
                 font-size: 50px;
+                color: #09CA51;
                 float: left;
             }
         }
-        
+        .mint-cell-wrapper{
+            padding-right: 10vw !important;
+        }
     }
     .mint-button--large{
         width: 70vw;
