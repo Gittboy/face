@@ -15,7 +15,7 @@ const routes = [{
         children: [{
                 path: 'registry',
                 components: {
-                    jump: () =>
+                    registry: () =>
                         import ('../views/registry.vue')
                 }
             },

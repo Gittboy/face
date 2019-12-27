@@ -13,8 +13,9 @@ Vue.prototype.http = axios
 
 import jq from 'jquery'
 
-import { checkRes } from './common/public/pubMethod.js'
+import { checkRes, debounce } from './common/public/pubMethod.js'
 Vue.prototype.checkRes = checkRes
+Vue.prototype.debounce = debounce
 
 // import vant from 'vant-ui'
 // import 'vant-ui/lib'

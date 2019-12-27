@@ -21,8 +21,9 @@
             <mt-button type="primary" class="mybtn" @click="tempopen">临时开锁</mt-button>
             <nav class="navs">
                 <!-- <router-link to="login/system" class="left">进入系统</router-link> -->
-                <router-link to="login/registry" class="right">用户注册</router-link>
+                <router-link to="index/registry" class="right">用户注册</router-link>
             </nav>
+            <router-view name="registry"></router-view>
         </div>
     </div>
 </template>
@@ -39,7 +40,8 @@ export default {
     },
     methods: {
         tempopen(){
-            this.http.get(`/v1/api/terminal/openlock/code?user_id=${user_id}&community_id=${community_id}&salt=randomsalt&token=${token}&identity=${token}`).then(res=>{
+            this.http.post(`/v1/api/terminal/openlock/code?user_id=${user_id}&community_id=${community_id}&salt=randomsalt&token=${token}&identity=${token}`,
+            {"auth_code":this.tempid}).then(res=>{
                 if(res.data.code!=1){
                     Toast(res.data.reason)
                 }else{
@@ -47,10 +49,10 @@ export default {
                 }
             }, err=>{
                 Toast({
-                    message: err,
+                    message: err
                     // icon font 的class名
                     // icon图表类  icon- 具体的图标类型
-                    iconClass: 'icon icon-success'  
+                    // iconClass: 'icon icon-success'  
                 })
             })
         }
