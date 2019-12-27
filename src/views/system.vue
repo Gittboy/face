@@ -1,12 +1,11 @@
 <template>
     <div id="system" class="new_page">
-        <div style="position: relative">
             <mt-header :title="links[selected].title?links[selected].title:links[selected].text">
             <!-- <router-link to="/login" slot="left">
                 <mt-button icon="back">返回</mt-button>
             </router-link> -->
             </mt-header>
-            <div v-show="selected==0">
+            <div v-show="selected==0" style="flex: 1">
                 <lock1 />
             </div>
             <div v-show="selected==1">
@@ -16,7 +15,6 @@
                 <lock3 />
             </div>
             <!-- <router-view name="setting"></router-view>  -->
-        </div>
         
         <ul id="navs_wrap">
             <li class="nav_item" v-for="(item, index) in links" :key="index" :data-index="index" @click.capture="changeTab($event)">
@@ -77,6 +75,8 @@ export default {
         min-height: 100%;
         background-color: #fff;
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
         ul, li{
             list-style: none;
         }

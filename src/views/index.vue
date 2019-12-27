@@ -81,6 +81,7 @@ export default {
         margin-top: 33vh;
         #field_id{
             display: block;
+            border: 1px solid skyblue;
         }
         .mybtn{
             margin-top: 20px;
