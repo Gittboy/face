@@ -7,6 +7,7 @@
             </div>
             <router-link to="/system/setting" class="jump_setting">修改信息</router-link>
         </div>
+        <router-view name="setting"></router-view>
     </div>
 </template>
 

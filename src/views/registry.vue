@@ -10,13 +10,17 @@
         <div class="field_wrap">
             <div class="id_wrap">
                 <label for="inp_id">手机号：</label>
+                <!-- 用户输入的手机号  phone 字段 -->
                 <input type="text" id="inp_id"  v-model="phone" class="myinput">
             </div>
             <div class="pwd_wrap">
                 <label for="inp_pwd">验证码：</label>
+                <!-- 用户获取后输入的验证码  captcha_code 字段 -->
                 <input type="text" id="inp_pwd" v-model="captcha_code" class="myinput">
+                <!-- 获取验证码按钮，点击60s后重新获取验证码 getVerification 方法 -->
                 <mt-button type="default" size="small" id="get_pwd" @click="getVerification">{{text}}</mt-button>
             </div>
+            <!-- 提交手机号和验证码验证登录信息 submit 方法 -->
             <mt-button type="primary" class="mybtn" @click="submit">提交并完善信息</mt-button>
         </div>
         <router-view name=""></router-view>
@@ -40,6 +44,7 @@ export default {
             if(this.timer){
                 return ;
             } else {
+                this.http.get()
                 this.timer = setInterval(function(){
                     _this.text = _this.counter + "秒后刷新";
                     _this.counter--;

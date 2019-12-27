@@ -12,11 +12,17 @@ const routes = [{
         path: "/index",
         component: () =>
             import ('../views/index.vue'),
+        meta: {
+            title: "主页"
+        },
         children: [{
                 path: 'registry',
                 components: {
                     registry: () =>
                         import ('../views/registry.vue')
+                },
+                meta: {
+                    title: "用户注册"
                 }
             },
             {
@@ -48,6 +54,13 @@ const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
     routes
+})
+router.beforeEach((to, from, next) => {
+    /* 路由发生变化修改页面title */
+    if (to.meta.title) {
+        document.title = to.meta.title;
+    }
+    next();
 })
 
 export default router

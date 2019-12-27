@@ -1,5 +1,5 @@
 <template>
-    <div id="system">
+    <div id="system" class="new_page">
         <div style="position: relative">
             <mt-header :title="links[selected].title?links[selected].title:links[selected].text">
             <!-- <router-link to="/login" slot="left">
@@ -15,7 +15,7 @@
             <div v-show="selected==2">
                 <lock3 />
             </div>
-            <router-view name="setting"></router-view> 
+            <!-- <router-view name="setting"></router-view>  -->
         </div>
         
         <ul id="navs_wrap">
@@ -60,6 +60,9 @@ export default {
         changeTab(event){
             this.selected = event.currentTarget.dataset.index
         }
+    },
+    created(){
+        console.log("系统页跳转成功")
     }
     
 }
@@ -85,14 +88,13 @@ export default {
             width: 100%;
             padding-block-start: 0;
             padding: 0;
-            background-color: #ccc;
+            background-color: #F3F3F3;
             margin-bottom: 0;
-            padding-bottom: 5px;
             .text_item{
                 display: inline-block;
                 font-size: 16px;
                 padding: 0 5px;
-                line-height: 40px;
+                line-height: 50px;
                 list-style: none;
             }
             .text_item_active{

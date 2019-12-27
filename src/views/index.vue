@@ -40,7 +40,7 @@ export default {
     },
     methods: {
         tempopen(){
-            this.http.post(`/v1/api/terminal/openlock/code?user_id=${user_id}&community_id=${community_id}&salt=randomsalt&token=${token}&identity=${token}`,
+            this.http.post(`/v1/api/terminal/openlock/code?${this.$store.getters.apiVerifi}`,
             {"auth_code":this.tempid}).then(res=>{
                 if(res.data.code!=1){
                     Toast(res.data.reason)
@@ -59,10 +59,13 @@ export default {
         
     },
     created(){
-        console.log(this.$store.state.token);
-        if(this.$store.state.token){
-            this.$router.replace('/system')
-        }
+        console.log('主页加载ok');
+        this.http.get(officalcount/getToken).then(res=>{
+            this.$store.commit('saveVerification', res.data);
+            if(res.data.isRegistered){
+                this.$router.replace('/system');
+            }
+        })
     }
 }
 </script>

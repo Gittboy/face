@@ -1,5 +1,5 @@
 <template>
-    <div id="user_setting" class=".new_page">
+    <div id="user_setting" class="new_page">
         <mt-header :title="title">
             <mt-button @click="handleBack" icon="back" slot="left">返回</mt-button>
         </mt-header>

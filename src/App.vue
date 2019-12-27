@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="new_page">
     <router-view></router-view>
     <router-view name="jump"></router-view>
   </div>
@@ -7,7 +7,8 @@
 
 <script>
 export default {
-  
+  created(){
+  }
 }
 </script>
 
@@ -20,6 +21,8 @@ export default {
   text-align: center;
   color: #2c3e50;
   position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 #nav {
