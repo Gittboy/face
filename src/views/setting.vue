@@ -12,10 +12,15 @@
             <!-- <mt-field label="人脸头像" placeholder="请选择头像" v-model="user_avatar"></mt-field> -->
             <mt-field label="身份证号" placeholder="请输入身份证号" type="number" v-model="identify"></mt-field>
             <mt-field label="姓名" placeholder="请输入姓名" type="text" v-model="name"></mt-field>
-            <mt-field label="楼号" placeholder="请输入楼号" type="text" v-model="house_num"></mt-field>
+            <!-- <mt-field label="楼号" placeholder="请输入楼号" type="text" v-model="house_num"></mt-field>
             <mt-field label="单元号" placeholder="请输入单元号" type="number" v-model="unit_num"></mt-field>
-            <mt-field label="门牌号" placeholder="请输入门牌号" type="number" v-model="gate_num"></mt-field>
+            <mt-field label="门牌号" placeholder="请输入门牌号" type="number" v-model="gate_num"></mt-field> -->
+            <div class="selectWrapper">
+                <span class="">选择住址</span>
+
+            </div>
             <!-- <van-picker :columns="columns" @change="onChange" /> -->
+            <!-- <van-area :area-list="areaList" :columns-num="3" title="选择住址" /> -->
         </div>
         <mt-button type="primary" size="large">提交审核</mt-button>
     </div>
@@ -27,6 +32,10 @@ import Vue from 'vue';
 // Vue.use(Area)
 import {Field} from 'mint-ui';
 Vue.component(Field.name, Field);
+import { Area, Popup } from 'vant';
+import 'vant/lib/area/style';
+Vue.use(Area);
+import areas from './areas'
 export default {
     data(){
         return {
@@ -43,6 +52,22 @@ export default {
             //     '浙江': ['杭州', '宁波', '温州', '嘉兴', '湖州'],
             //     '福建': ['福州', '厦门', '莆田', '三明', '泉州']
             // },
+            // areaList: areas,
+            // areaList: {
+            //     province_list: {
+            //         100000: 'a',
+            //         200000: 'b',
+            //         300000: 'c',
+            //     },
+            //     city_list: {
+            //         101000: 'aa',
+            //         102000: 'ab',
+            //         103000: 'ac'
+            //     },
+            //     country_list: {
+
+            //     }
+            // }
         }
     },
     computed: {

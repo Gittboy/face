@@ -5,13 +5,17 @@
             <div class="info_wrapper">
                 <p v-for="(item, index) in info" :key="index">{{item.key+" "+':'+" "+item.value}}</p>
             </div>
-            <router-link to="/system/setting" class="jump_setting">修改信息</router-link>
+            <!-- <router-link to="/system/setting" class="jump_setting">修改信息</router-link> -->
+            <mt-button type="primary" id="setting" size='normal' @click.native="jumpToSeeting">修改信息</mt-button>
         </div>
         <router-view name="setting"></router-view>
     </div>
 </template>
 
 <script>
+import Vue from 'vue'
+import {Button} from 'mint-ui'
+Vue.component(Button.name, Button)
 export default {
     data(){
         return {
@@ -29,7 +33,12 @@ export default {
                     key: "地址",
                     value: "12栋6单元608"
                 }
-            ]
+            ],
+        }
+    },
+    methods: {
+        jumpToSeeting(){
+            this.$router.push('/system/setting?type=modify')
         }
     }
 }
@@ -52,6 +61,10 @@ export default {
         .jump_setting{
             float: right;
             margin-top: 40px;
+        }
+        #setting{
+            margin-top: 40px;
+            float: right;
         }
     }
 }
