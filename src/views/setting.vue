@@ -5,7 +5,7 @@
         </mt-header>
         <div class="field">
             <div class="upload_wrapper clearfix">
-                <span class="avatar_label">人脸头像</span>
+                <span class="avatar_label" v-if="!user_avatar">人脸头像</span>
                 <span class="mintui mintui-tupianshangchuanmian avatar_upload" @click="handleUpload"></span>
             </div>
             <!-- <mt-field label="人脸头像" placeholder="请选择头像" v-model="user_avatar"></mt-field> -->
@@ -14,18 +14,23 @@
             <mt-field label="楼号" placeholder="请输入楼号" type="text" v-model="house_num"></mt-field>
             <mt-field label="单元号" placeholder="请输入单元号" type="number" v-model="unit_num"></mt-field>
             <mt-field label="门牌号" placeholder="请输入门牌号" type="number" v-model="gate_num"></mt-field>
-            <van-picker :columns="columns" @change="onChange" />
+            <!-- <van-picker :columns="columns" @change="onChange" /> -->
+            <!-- <Select /> -->
         </div>
         <mt-button type="primary" size="large">提交审核</mt-button>
     </div>
 </template>
 
 <script>
-import Vue from 'vue';
-import { Picker } from 'vant';
-Vue.use(Picker);
-import 'vant/lib/picker/style';
+// import Vue from 'vue';
+// import { Picker } from 'vant';
+// Vue.use(Picker);
+// import 'vant/lib/picker/style';
+// import Select from '../components/select';
 export default {
+    components: {
+        // Select,
+    },
     data(){
         return {
             title: "个人信息修改",
@@ -35,33 +40,34 @@ export default {
             house_num: "",
             unit_num: "",
             gate_num: "",
-            citys: {
-                '浙江': ['杭州', '宁波', '温州', '嘉兴', '湖州'],
-                '福建': ['福州', '厦门', '莆田', '三明', '泉州']
-            },
+            // citys: {
+            //     '浙江': ['杭州', '宁波', '温州', '嘉兴', '湖州'],
+            //     '福建': ['福州', '厦门', '莆田', '三明', '泉州']
+            // },
             
         }
     },
     computed: {
         columns() {
-            return [
-                {
-                    values: Object.keys(this.citys),
-                    className: 'column1'
-                },
-                {
-                    values: this.citys['浙江'],
-                    className: 'column2',
-                    defaultIndex: 2
-                }
-            ]
+            // return [
+            //     {
+            //         values: Object.keys(this.citys),
+            //         className: 'column1'
+            //     },
+            //     {
+            //         values: this.citys['浙江'],
+            //         className: 'column2',
+            //         defaultIndex: 2
+            //     }
+            // ]
         }
     },
     methods: {
         handleBack(){
-            this.$router.replace("/system?index=2")
+            this.$router.replace("/system")
         },
         handleUpload(){
+            alert("选择相册图片");
             wx.chooseImage({
                 count: 1, // 默认9
                 sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
@@ -74,6 +80,10 @@ export default {
         onChange(){
             console.log('ok');
         }
+    },
+    created(){
+        wx.config(this.$store.state.verification.jssdkConfig);
+        wx.ready(function(){alert('wx ready')})
     }
 }
 </script>
@@ -104,8 +114,8 @@ export default {
                 float: left;
             }
         }
-        .mint-cell-wrapper{
-            padding-right: 10vw !important;
+        /deep/ .mint-cell-wrapper{
+            padding-right: 10vw;
         }
     }
     .mint-button--large{
@@ -114,5 +124,4 @@ export default {
         margin-top: 15vh;
     }
 }
-
 </style>

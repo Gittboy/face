@@ -15,6 +15,7 @@
 export default {
     data(){
         return {
+            //  选中的门的字段值
             value: "东门",
             options: [
                 '东门',
@@ -41,6 +42,10 @@ export default {
     .mint-button--large{
         width: 40vw;
         margin-left: 30vw;
+    }
+    /deep/ .mint-radiolist-label{
+        padding-left: 35vw;
+        text-align: left;
     }
 }
 </style>

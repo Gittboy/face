@@ -5,14 +5,14 @@
                 <mt-button icon="back">返回</mt-button>
             </router-link> -->
             </mt-header>
-            <div v-show="selected==0" style="flex: 1">
-                <lock1 />
+            <div v-show="selected==0" style="flex: 1; background-color: ">
+                <tempUnlock />
             </div>
             <div v-show="selected==1">
-                <lock2 />
+                <remoteUnlock />
             </div>
             <div v-show="selected==2">
-                <lock3 />
+                <selfInfo />
             </div>
             <!-- <router-view name="setting"></router-view>  -->
         
@@ -27,14 +27,14 @@
 </template>
 
 <script>
-import lock1 from '../components/lock1'
-import lock2 from '../components/lock2'
-import lock3 from '../components/lock3'
+import tempUnlock from '../components/tempUnlock'
+import remoteUnlock from '../components/remoteUnlock'
+import selfInfo from '../components/selfInfo'
 export default {
     components: {
-        lock1,
-        lock2,
-        lock3,
+        tempUnlock,
+        remoteUnlock,
+        selfInfo,
     },
     data(){
         return {
@@ -42,7 +42,7 @@ export default {
             links: [
                 {
                     text: '开锁码生成',
-                    title: '临时开锁码'
+                    title: '临时开锁'
                 },
                 {
                     text: '远程开锁',
