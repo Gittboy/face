@@ -5,8 +5,8 @@ import router from './router'
 import store from './store'
 
 import mint from 'mint-ui'
+// 导入mint-ui全局样式表
 import 'mint-ui/lib/style.css'
-Vue.use(mint)
 
 import axios from 'axios'
 Vue.prototype.http = axios

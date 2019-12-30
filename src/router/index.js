@@ -16,23 +16,22 @@ const routes = [{
             title: "主页"
         },
         children: [{
-                path: 'registry',
-                components: {
-                    registry: () =>
-                        import ('../views/registry.vue')
-                },
-                meta: {
-                    title: "用户注册"
-                }
+            path: 'registry',
+            components: {
+                registry: () =>
+                    import ('../views/registry.vue')
             },
-            {
-                path: 'setting',
+            meta: {
+                title: "用户注册"
+            },
+            children: [{
+                path: 'uploadInfo',
                 components: {
-                    setting: () =>
+                    uploadInfo: () =>
                         import ('../views/setting.vue')
                 }
-            }
-        ]
+            }]
+        }]
     },
     {
         path: '/system',

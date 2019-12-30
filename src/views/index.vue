@@ -17,7 +17,7 @@
             </nav>
         </div> -->
         <div class="login_wrap">
-            <myInput :holder="tip"/>
+            <myInput :holder="tip" @delivery="receive"/>
             <!-- <mt-field placeholder="请输入开锁码" id="field_id" v-model="tempid"></mt-field> -->
             <mt-button type="primary" class="mybtn" @click="tempopen">临时开锁</mt-button>
             <nav class="navs">
@@ -30,7 +30,9 @@
 </template>
 
 <script>
-import {Toast} from 'mint-ui'
+import Vue from 'vue'
+import {Toast, Button} from 'mint-ui'
+Vue.component(Button.name, Button)
 import myInput from '../components/myInput.vue'
 export default {
     components: {
@@ -45,6 +47,10 @@ export default {
         }
     },
     methods: {
+        receive(value){
+            this.tempid = value;
+            console.log(this.tempid)
+        },
         tempopen(){
             this.http.post(`/v1/api/terminal/openlock/code?${this.$store.getters.apiVerifi}`,
             {"auth_code":this.tempid}).then(res=>{

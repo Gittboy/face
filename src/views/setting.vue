@@ -22,11 +22,12 @@
 </template>
 
 <script>
-// import Vue from 'vue';
+import Vue from 'vue';
 // import { Picker } from 'vant';
 // Vue.use(Picker);
 // import 'vant/lib/picker/style';
-// import Select from '../components/select';
+import {Field} from 'mint-ui';
+Vue.component(Field.name, Field);
 export default {
     components: {
         // Select,
@@ -64,10 +65,9 @@ export default {
     },
     methods: {
         handleBack(){
-            this.$router.replace("/system")
+            this.$router.go(-1);
         },
         handleUpload(){
-            alert("选择相册图片");
             wx.chooseImage({
                 count: 1, // 默认9
                 sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
