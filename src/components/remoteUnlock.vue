@@ -12,6 +12,10 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import {Radio, Button, Toast} from 'mint-ui'
+Vue.component(Radio.name, Radio)
+Vue.component(Button.name, Button) 
 export default {
     data(){
         return {

@@ -27,6 +27,9 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import {Header} from 'mint-ui'
+Vue.component(Header.name, Header)
 import tempUnlock from '../components/tempUnlock'
 import remoteUnlock from '../components/remoteUnlock'
 import selfInfo from '../components/selfInfo'

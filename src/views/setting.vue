@@ -4,10 +4,11 @@
             <mt-button @click="handleBack" icon="back" slot="left">返回</mt-button>
         </mt-header>
         <div class="field">
-            <div class="upload_wrapper clearfix">
+            <div class="upload_wrapper clearfix" v-if="!selected">
                 <span class="avatar_label" v-if="!user_avatar">人脸头像</span>
-                <span class="mintui mintui-tupianshangchuanmian avatar_upload" @click="handleUpload"></span>
+                <span class="mintui mintui-tupianshangchuanmian avatar_upload" @click="chooseAvatar"></span>
             </div>
+            <div id="avatarShow" ref="avatar"></div>
             <!-- <mt-field label="人脸头像" placeholder="请选择头像" v-model="user_avatar"></mt-field> -->
             <mt-field label="身份证号" placeholder="请输入身份证号" type="number" v-model="identify"></mt-field>
             <mt-field label="姓名" placeholder="请输入姓名" type="text" v-model="name"></mt-field>
@@ -15,7 +16,6 @@
             <mt-field label="单元号" placeholder="请输入单元号" type="number" v-model="unit_num"></mt-field>
             <mt-field label="门牌号" placeholder="请输入门牌号" type="number" v-model="gate_num"></mt-field>
             <!-- <van-picker :columns="columns" @change="onChange" /> -->
-            <!-- <Select /> -->
         </div>
         <mt-button type="primary" size="large">提交审核</mt-button>
     </div>
@@ -23,17 +23,15 @@
 
 <script>
 import Vue from 'vue';
-// import { Picker } from 'vant';
-// Vue.use(Picker);
-// import 'vant/lib/picker/style';
+// import {Area} from 'vant'
+// Vue.use(Area)
 import {Field} from 'mint-ui';
 Vue.component(Field.name, Field);
 export default {
-    components: {
-        // Select,
-    },
     data(){
         return {
+            selected: false,
+            from: '',
             title: "个人信息修改",
             user_avatar: "",
             identify: "",
@@ -45,7 +43,6 @@ export default {
             //     '浙江': ['杭州', '宁波', '温州', '嘉兴', '湖州'],
             //     '福建': ['福州', '厦门', '莆田', '三明', '泉州']
             // },
-            
         }
     },
     computed: {
@@ -67,23 +64,27 @@ export default {
         handleBack(){
             this.$router.go(-1);
         },
-        handleUpload(){
-            wx.chooseImage({
-                count: 1, // 默认9
-                sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-                success: function (res) {
-                var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-                }
-            });
-        },
-        onChange(){
-            console.log('ok');
+        chooseAvatar(){
+            this.selected = true;
+            //  Vue项目中图片地址必须使用 require(url) 否则不会显示
+            this.$refs.avatar.style.backgroundImage = 'url('+require('../assets/avatar.jpg')+')';
+            this.$refs.avatar.style.display = 'inline-block';
+            // wx.chooseImage({
+            //     count: 1, // 默认9
+            //     sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+            //     sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+            //     success: function (res) {
+            //     var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+            //     }
+            // });
         }
     },
     created(){
-        wx.config(this.$store.state.verification.jssdkConfig);
-        wx.ready(function(){alert('wx ready')})
+        //  配置微信sdk
+        // wx.config(this.$store.state.verification.jssdkConfig);
+        // wx.ready(function(){alert('wx ready')});
+        this.from = this.$router.params.type;
+        console.log(this.from);
     }
 }
 </script>
@@ -100,6 +101,16 @@ export default {
     .field{
         text-align: center;
         padding-top: 15vh;
+        #avatarShow{
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            // background-color: #09CA51;
+            // display: inline-block;
+            background: center/cover;
+            // background-image: url(../assets/avatar.jpg);
+            display: none;
+        }
         .upload_wrapper{
             vertical-align: middle;
             .avatar_label{

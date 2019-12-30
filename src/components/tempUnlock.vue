@@ -11,7 +11,10 @@
 </template>
 
 <script>
-import {Toast} from 'mint-ui'
+import Vue from 'vue'
+import {Toast, Badge, Button} from 'mint-ui'
+Vue.component(Badge.name, Badge)
+Vue.component(Button.name, Button)
 export default {
     data(){
         return {
