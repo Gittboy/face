@@ -17,7 +17,8 @@
             </nav>
         </div> -->
         <div class="login_wrap">
-            <mt-field placeholder="请输入开锁码" id="field_id" v-model="tempid"></mt-field>
+            <myInput :holder="tip"/>
+            <!-- <mt-field placeholder="请输入开锁码" id="field_id" v-model="tempid"></mt-field> -->
             <mt-button type="primary" class="mybtn" @click="tempopen">临时开锁</mt-button>
             <nav class="navs">
                 <!-- <router-link to="login/system" class="left">进入系统</router-link> -->
@@ -30,9 +31,14 @@
 
 <script>
 import {Toast} from 'mint-ui'
+import myInput from '../components/myInput.vue'
 export default {
+    components: {
+        myInput,
+    },
     data(){
         return {
+            tip: "请输入开锁码",
             tempid: "",
             links: [
             ]
