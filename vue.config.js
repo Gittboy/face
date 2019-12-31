@@ -1,4 +1,3 @@
 module.exports = {
-    publicPath: "./",
-    // assetsDir: "static"
+    publicPath: "/mobile/"
 }
