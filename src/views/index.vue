@@ -91,6 +91,7 @@ export default {
         this.http.get('http://facerke.epplink.net/officalcount/getToken').then(res=>{
             console.log(res, res.data);
             this.$store.commit('saveVerification', res.data);
+            this.$store.commit('getJssdkConfig', JSON.parse(res.data.jssdkConfig));
             if(res.data.isSignIn){
                 this.$router.replace('/system');
             }

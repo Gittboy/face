@@ -22,9 +22,6 @@ export default {
             //  选中的门的字段值
             value: "东门",
             options: [
-                '东门',
-                '西门',
-                '西二门'
             ]
         }
     },
@@ -34,7 +31,14 @@ export default {
         }
     },
     created(){
-        this.options = this.$store.userInfo.community_locks;
+        setTimeout(()=>{
+            this.$store.state.userInfo.community_locks.forEach((item, index)=>{
+                let option = {};
+                option.label = item.lock_name;
+                option.value = item.lock_id;
+                this.options.push(option);
+            })
+        }, 1000);
     }
 }
 </script>

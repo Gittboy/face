@@ -14,7 +14,7 @@
             <!-- <mt-field label="人脸头像" placeholder="请选择头像" v-model="user_avatar"></mt-field> -->
             <mt-field label="身份证号" placeholder="请输入身份证号" type="number" v-model="identify"></mt-field>
             <mt-field label="姓名" placeholder="请输入姓名" type="text" v-model="name"></mt-field>
-            <mt-field label="手机号" placeholder="请输入手机号" type="number" v-model="phone_num" v-if="this.phone_num?false:true"></mt-field>
+            <mt-field label="手机号" placeholder="请输入手机号" type="number" v-model="phone_num" v-if="showPhone"></mt-field>
             <!-- <mt-field label="楼号" placeholder="请输入楼号" type="text" v-model="house_num"></mt-field>
             <mt-field label="单元号" placeholder="请输入单元号" type="number" v-model="unit_num"></mt-field>
             <mt-field label="门牌号" placeholder="请输入门牌号" type="number" v-model="gate_num"></mt-field> -->
@@ -56,6 +56,7 @@ export default {
             unit: "",
             hotUpdate: "",
             phone_num: "",
+            showPhone: true,
             address: "",
             selectBtn: '选择住址',
             show: false,
@@ -106,12 +107,19 @@ export default {
                 sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
                 sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
                 success: function (res) {
-                    // var localIds = res.localIds;  返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-                    this.$refs.avatarSelect.style.visibility = 'hidden';
-                    //  Vue项目中图片地址必须使用 require(url) 否则不会显示
-                    this.$refs.avatar.style.backgroundImage = 'url('+require(res.localIds[0])+')';
-                    this.$refs.avatar.style.display = 'block';
-                    this.user_avatar = res.localIds[0];
+                    wx.getLocalImgData({
+                        localId: res.localIds[0], // 图片的localID
+                        success: function (res) {
+                            this.user_avatar = res.localData; // localData是图片的base64数据，可以用img标签显示
+                            // var localIds = res.localIds;  返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                            this.$refs.avatarSelect.style.visibility = 'hidden';
+                            //  Vue项目中图片地址必须使用 require(url) 否则不会显示
+                            this.$refs.avatar.style.backgroundImage = 'url('+res.localData+')';
+                            this.$refs.avatar.style.display = 'block';
+                        }
+                    });
+
+                    
                 }
             });
         },
@@ -149,14 +157,17 @@ export default {
         }
     },
     created(){
-         配置微信sdk
-        wx.config(this.$store.state.verification.jssdkConfig);
+        // 配置微信sdk
+        console.log(wx, this.$store.state.verification.jssdkConfig);
+        wx.config(this.$store.state.jssdkConfig);
         wx.ready(function(){alert('wx ready')});
         wx.error(function(res){console.log(res)});
         this.from = this.$route.query.from;
         if(this.from=='uploadInfo'){
             this.title = '完善个人信息',
             this.phone_num = this.$route.query.phone;
+            this.showPhone = false;
+            alert(this.showPhone);
         }
     }
 }

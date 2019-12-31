@@ -10,6 +10,7 @@ export default new Vuex.Store({
         verification: {},
         // 对象类型需遵循Vue的响应式规则
         userInfo: {},
+        jssdkConfig: {}
     },
     getters: {
         // url("/v1/api/terminal/openlock/code")}?user_id={$userId}&community_id={$communityId}&timestamp={$timeStamp}&token={$token}&identity={$identity}
@@ -19,6 +20,9 @@ export default new Vuex.Store({
     mutations: {
         saveVerification(state, verification) {
             state.verification = {...verification }
+        },
+        getJssdkConfig(state, config) {
+            state.jssdkConfig = {...config }
         },
         getUserInfo(state, userInfo) {
             state.userInfo = {...userInfo };

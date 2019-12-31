@@ -42,10 +42,13 @@ export default {
         }
     },
     created(){
-        this.info[0].value = this.$store.state.userInfo.community_info.id_number;
-        this.info[1].value = this.$store.state.userInfo.community_info.username;
-        this.info[2].value = this.$store.state.userInfo.community_info.community_address;
-        this.avatar = require(this.$store.state.userInfo.community_info.face_image_url);
+        setTimeout(()=>{
+            this.info[0].value = this.$store.state.userInfo.community_info.id_number;
+            this.info[1].value = this.$store.state.userInfo.community_info.username;
+            this.info[2].value = this.$store.state.userInfo.community_info.community_address;
+            console.log(this.info);
+            this.avatar = this.$store.state.userInfo.community_info.face_image_url;
+        }, 1000);
     }
 }
 </script>
