@@ -6,7 +6,7 @@
                 <p v-for="(item, index) in info" :key="index">{{item.key+" "+':'+" "+item.value}}</p>
             </div>
             <!-- <router-link to="/system/setting" class="jump_setting">修改信息</router-link> -->
-            <mt-button type="primary" id="setting" size='normal' @click.native="jumpToSeeting">修改信息</mt-button>
+            <mt-button type="primary" id="setting" size='small' @click.native="jumpToSeeting">修改信息</mt-button>
         </div>
         <router-view name="setting"></router-view>
     </div>
@@ -62,17 +62,17 @@ export default {
             max-width: 100%;
         }
         .info_wrapper{
-            padding-top: 40px;
+            padding-top: 20px;
         }
         p{
             text-align: left;
         }
         .jump_setting{
             float: right;
-            margin-top: 40px;
+            margin-top: 20px;
         }
         #setting{
-            margin-top: 40px;
+            margin-top: 20px;
             float: right;
         }
     }
