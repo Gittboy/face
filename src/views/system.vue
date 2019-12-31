@@ -5,22 +5,12 @@
                 <mt-button icon="back">返回</mt-button>
             </router-link> -->
             </mt-header>
-            <div v-show="selected==0" style="flex: 1; background-color: ">
-                <tempUnlock />
-            </div>
-            <div v-show="selected==1">
-                <remoteUnlock />
-            </div>
-            <div v-show="selected==2">
-                <selfInfo />
-            </div>
-            <!-- <router-view name="setting"></router-view>  -->
+
+            <router-view name="tab"></router-view> 
         
         <ul id="navs_wrap">
             <li class="nav_item" v-for="(item, index) in links" :key="index" :data-index="index" @click.capture="changeTab($event)">
-                <span :class="{text_item: 1, text_item_active: index==selected}">
-                    {{item.text}}
-                </span>
+                <router-link :to="item.path" class="text_item">{{item.text}}</router-link>
             </li>
         </ul>
     </div>
@@ -45,13 +35,16 @@ export default {
             links: [
                 {
                     text: '开锁码生成',
-                    title: '临时开锁'
+                    title: '临时开锁',
+                    path: '/system/tempUnlock'
                 },
                 {
                     text: '远程开锁',
+                    path: '/system/remoteUnlock'
                 },
                 {
                     text: '个人信息',
+                    path: '/system/selfInfo'
                 },
 
             ]
@@ -63,8 +56,8 @@ export default {
         }
     },
     created(){
-        this.http.get("/v1/api/terminal/community/accepted?"+this.$store.getters.apiVerifi).then(res=>{
-        // this.http.get("http://facerke.epplink.net/v1/api/terminal/community/accepted?user_id=c952f21e13cbb61390a5a965604ab9ba&community_id=26").then(res=>{
+        // this.http.get("/v1/api/terminal/community/accepted?"+this.$store.getters.apiVerifi).then(res=>{
+        this.http.get("http://facerke.epplink.net/v1/api/terminal/community/accepted?user_id=c952f21e13cbb61390a5a965604ab9ba&community_id=26").then(res=>{
             console.log(res.data, res.data.communities[0]);
             if(res.data.code!=1){
                 Toast("获取信息失败, 请重试");
@@ -109,6 +102,12 @@ export default {
                 padding: 0 5px;
                 line-height: 50px;
                 list-style: none;
+                text-decoration: none;
+                color: #2C3E50;
+            }
+            .router-link-exact-active{
+                color: skyblue;
+                border-bottom: 2px solid skyblue;
             }
             .text_item_active{
                 color: skyblue;

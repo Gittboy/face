@@ -42,12 +42,32 @@ const routes = [{
             jump: () =>
                 import ('../views/system.vue')
         },
+        redirect: "/system/tempUnlock",
         children: [{
-            path: 'setting',
+            path: "remoteUnlock",
             components: {
-                setting: () =>
-                    import ('../views/setting.vue')
+                tab: () =>
+                    import ('../components/remoteUnlock.vue')
             }
+        }, {
+            path: "tempUnlock",
+            components: {
+                tab: () =>
+                    import ('../components/tempUnlock.vue')
+            }
+        }, {
+            path: "selfInfo",
+            components: {
+                tab: () =>
+                    import ('../components/selfInfo.vue')
+            },
+            children: [{
+                path: 'setting',
+                components: {
+                    setting: () =>
+                        import ('../views/setting.vue')
+                }
+            }]
         }]
     },
 ]

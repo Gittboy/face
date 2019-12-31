@@ -31,14 +31,12 @@ export default {
         }
     },
     created(){
-        setTimeout(()=>{
-            this.$store.state.userInfo.community_locks.forEach((item, index)=>{
-                let option = {};
-                option.label = item.lock_name;
-                option.value = item.lock_id;
-                this.options.push(option);
-            })
-        }, 1000);
+        this.$store.state.userInfo.community_locks.forEach((item, index)=>{
+            let option = {};
+            option.label = item.lock_name;
+            option.value = item.lock_id;
+            this.options.push(option);
+        })
     }
 }
 </script>

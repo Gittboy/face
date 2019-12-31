@@ -21,18 +21,22 @@ export default {
             lock_num: '000000',
         }
     },
-    // 获取开锁码
-    getLockcoe(){
-        this.http.post(`/v1/api/terminal/openlock/code?${this.$store.getters.apiVerifi}`,
-        {"community_locks":["south_1","gate_1"]}).then(res=> {
-            if(res.data.code!=1){
-                Toast(res.data.reason)
-            }else {
-                this.lock_num = res.data.auth_code;
-                Toast('获取开锁码成功');
-            }
-        })
+    methods: {
+        // 获取开锁码
+        getLockcode(){
+            // this.http.post(`/v1/api/terminal/openlock/code?${this.$store.getters.apiVerifi}`,  user_id=c952f21e13cbb61390a5a965604ab9ba&community_id=26
+            this.http.post(`/v1/api/terminal/openlock/code?user_id=c952f21e13cbb61390a5a965604ab9ba&community_id=26`,
+            {"community_locks":["south_1","gate_1"]}).then(res=> {
+                if(res.data.code!=1){
+                    Toast(res.data.reason)
+                }else {
+                    this.lock_num = res.data.auth_code;
+                    Toast('获取开锁码成功');
+                }
+            })
+        }
     }
+    
 }
 </script>
 

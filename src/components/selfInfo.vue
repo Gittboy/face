@@ -38,17 +38,14 @@ export default {
     },
     methods: {
         jumpToSeeting(){
-            this.$router.push('/system/setting?type=modify')
+            this.$router.push('/system/selfInfo/setting?type=modify')
         }
     },
     created(){
-        setTimeout(()=>{
-            this.info[0].value = this.$store.state.userInfo.community_info.id_number;
-            this.info[1].value = this.$store.state.userInfo.community_info.username;
-            this.info[2].value = this.$store.state.userInfo.community_info.community_address;
-            console.log(this.info);
-            this.avatar = this.$store.state.userInfo.community_info.face_image_url;
-        }, 1000);
+        this.info[0].value = this.$store.state.userInfo.community_info.id_number;
+        this.info[1].value = this.$store.state.userInfo.community_info.username;
+        this.info[2].value = this.$store.state.userInfo.community_info.community_address;
+        this.avatar = this.$store.state.userInfo.community_info.face_image_url;
     }
 }
 </script>
