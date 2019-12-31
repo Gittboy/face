@@ -4,38 +4,45 @@
             <mt-button @click="handleBack" icon="back" slot="left">返回</mt-button>
         </mt-header>
         <div class="field">
-            <div class="upload_wrapper clearfix" v-if="!selected">
-                <span class="avatar_label" v-if="!user_avatar">人脸头像</span>
-                <span class="mintui mintui-tupianshangchuanmian avatar_upload" @click="chooseAvatar"></span>
+            <div class="upload_wrapper clearfix">
+                <div ref='avatarSelect'>
+                    <span class="avatar_label">人脸头像</span>
+                    <span class="mintui mintui-tupianshangchuanmian avatar_upload" @click="chooseAvatar"></span>
+                </div>
+                <div id="avatarShow" ref="avatar"></div>
             </div>
-            <div id="avatarShow" ref="avatar"></div>
             <!-- <mt-field label="人脸头像" placeholder="请选择头像" v-model="user_avatar"></mt-field> -->
             <mt-field label="身份证号" placeholder="请输入身份证号" type="number" v-model="identify"></mt-field>
             <mt-field label="姓名" placeholder="请输入姓名" type="text" v-model="name"></mt-field>
+            <mt-field label="手机号" placeholder="请输入手机号" type="number" v-model="phone_num" v-if="this.phone_num?false:true"></mt-field>
             <!-- <mt-field label="楼号" placeholder="请输入楼号" type="text" v-model="house_num"></mt-field>
             <mt-field label="单元号" placeholder="请输入单元号" type="number" v-model="unit_num"></mt-field>
             <mt-field label="门牌号" placeholder="请输入门牌号" type="number" v-model="gate_num"></mt-field> -->
             <div class="selectWrapper">
-                <span class="">选择住址</span>
-
+                <span id="selectLabel">住址</span>
+                <span v-if="address" id="address">{{address}}</span>
+                <mt-button id="selectBtn" type="primary" @click.native="handleSelect">{{selectBtn}}</mt-button>
             </div>
             <!-- <van-picker :columns="columns" @change="onChange" /> -->
             <!-- <van-area :area-list="areaList" :columns-num="3" title="选择住址" /> -->
+            <van-popup v-model="show" round position="bottom" :style="{ height: '40%' }">
+                <van-area :area-list="areaList" :columns-num="3" title="选择住址" @cancel="show=false;" @confirm="confirm" />
+            </van-popup>
         </div>
-        <mt-button type="primary" size="large">提交审核</mt-button>
+        <mt-button type="primary" size="large" @click.native="submit">提交审核</mt-button>
     </div>
 </template>
 
 <script>
 import Vue from 'vue';
-// import {Area} from 'vant'
-// Vue.use(Area)
-import {Field} from 'mint-ui';
+import {Field, Button} from 'mint-ui';
 Vue.component(Field.name, Field);
+Vue.component(Button.name, Button);
 import { Area, Popup } from 'vant';
 import 'vant/lib/area/style';
-Vue.use(Area);
-import areas from './areas'
+import 'vant/lib/popup/style';
+Vue.use(Area).use(Popup);
+import areas from './areas';
 export default {
     data(){
         return {
@@ -45,14 +52,18 @@ export default {
             user_avatar: "",
             identify: "",
             name: "",
-            house_num: "",
-            unit_num: "",
-            gate_num: "",
+            building: "",
+            unit: "",
+            hotUpdate: "",
+            phone_num: "",
+            address: "",
+            selectBtn: '选择住址',
+            show: false,
             // citys: {
             //     '浙江': ['杭州', '宁波', '温州', '嘉兴', '湖州'],
             //     '福建': ['福州', '厦门', '莆田', '三明', '泉州']
             // },
-            // areaList: areas,
+            areaList: areas,
             // areaList: {
             //     province_list: {
             //         100000: 'a',
@@ -90,26 +101,63 @@ export default {
             this.$router.go(-1);
         },
         chooseAvatar(){
-            this.selected = true;
-            //  Vue项目中图片地址必须使用 require(url) 否则不会显示
-            this.$refs.avatar.style.backgroundImage = 'url('+require('../assets/avatar.jpg')+')';
-            this.$refs.avatar.style.display = 'inline-block';
-            // wx.chooseImage({
-            //     count: 1, // 默认9
-            //     sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-            //     sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-            //     success: function (res) {
-            //     var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-            //     }
-            // });
+            wx.chooseImage({
+                count: 1, // 默认9
+                sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                success: function (res) {
+                    // var localIds = res.localIds;  返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                    this.$refs.avatarSelect.style.visibility = 'hidden';
+                    //  Vue项目中图片地址必须使用 require(url) 否则不会显示
+                    this.$refs.avatar.style.backgroundImage = 'url('+require(res.localIds[0])+')';
+                    this.$refs.avatar.style.display = 'block';
+                    this.user_avatar = res.localIds[0];
+                }
+            });
+        },
+        handleSelect(){
+            // 底部弹出层  弹出层加载三级联动选项卡
+            this.show = true;
+        },
+        confirm(res){
+            let address = "";
+            res.forEach(item=> {
+                address += item.name;
+                return address;
+            });
+            this.building = res[0].name;
+            this.unit = res[1].name;
+            this.household = res[2].name;
+            console.log(address);
+            this.address = address;
+            this.selectBtn = '重新选择';
+            this.show = false;
+        },
+        submit(){
+            this.http.post("/v1/api/terminal/community/apply?"+this.$store.getters.apiVerifi, {
+                "id_number": this.phone_num,
+                "phone": this.phone_num,
+                "username": this.name,
+                "community_id": this.$store.verification.community_id,
+                "building": this.building,
+                "unit": this.unit,
+                "household": this.household,
+                "role": "01",
+                "pid": "0",
+                "face_image": this.user_avatar
+            })
         }
     },
     created(){
-        //  配置微信sdk
-        // wx.config(this.$store.state.verification.jssdkConfig);
-        // wx.ready(function(){alert('wx ready')});
-        this.from = this.$router.params.type;
-        console.log(this.from);
+         配置微信sdk
+        wx.config(this.$store.state.verification.jssdkConfig);
+        wx.ready(function(){alert('wx ready')});
+        wx.error(function(res){console.log(res)});
+        this.from = this.$route.query.from;
+        if(this.from=='uploadInfo'){
+            this.title = '完善个人信息',
+            this.phone_num = this.$route.query.phone;
+        }
     }
 }
 </script>
@@ -126,18 +174,9 @@ export default {
     .field{
         text-align: center;
         padding-top: 15vh;
-        #avatarShow{
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            // background-color: #09CA51;
-            // display: inline-block;
-            background: center/cover;
-            // background-image: url(../assets/avatar.jpg);
-            display: none;
-        }
         .upload_wrapper{
             vertical-align: middle;
+            position: relative;
             .avatar_label{
                 float: left;
                 width: 105px;
@@ -149,9 +188,43 @@ export default {
                 color: #09CA51;
                 float: left;
             }
+            #avatarShow{
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                // background-color: #09CA51;
+                // display: inline-block;
+                background: center/cover;
+                // background-image: url(../assets/avatar.jpg);
+                display: none;
+            }
         }
         /deep/ .mint-cell-wrapper{
             padding-right: 10vw;
+        }
+        .selectWrapper{
+            width: 100%;
+            height: 48px;
+            padding: 0 10vw 0 10px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            #selectLabel{
+                font-size: 16px;
+                width: 105px;
+                text-align: center;
+            }
+            #address{
+                margin-right: 10px;
+                max-width: 120px;
+            }
+            #selectBtn{
+
+            }
         }
     }
     .mint-button--large{

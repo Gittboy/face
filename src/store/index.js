@@ -12,8 +12,9 @@ export default new Vuex.Store({
         userInfo: {},
     },
     getters: {
-        apiVerifi: state => `user_id=${state.verification.userId}&community_id=${state.verification.community_id}
-        &salt=randomsalt&token=${state.verification.token}&identity=${state.verification.identity}`
+        // url("/v1/api/terminal/openlock/code")}?user_id={$userId}&community_id={$communityId}&timestamp={$timeStamp}&token={$token}&identity={$identity}
+        apiVerifi: state => `user_id=${state.verification.userId}&community_id=${state.verification.communityId}
+        &timestamp=${state.verification.timeStamp}&token=${state.verification.token}&identity=${state.verification.identity}`,
     },
     mutations: {
         saveVerification(state, verification) {

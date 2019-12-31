@@ -1,7 +1,7 @@
 <template>
     <div id="self_center">
         <div id="content_wrapper">
-            <img :src="avatar" alt="个人头像">
+            <img :src="avatar" alt="个人头像" class="user_avatar">
             <div class="info_wrapper">
                 <p v-for="(item, index) in info" :key="index">{{item.key+" "+':'+" "+item.value}}</p>
             </div>
@@ -19,19 +19,19 @@ Vue.component(Button.name, Button)
 export default {
     data(){
         return {
-            avatar: require('../assets/logo.png'),
+            avatar: "",
             info: [
                 {
                     key: "身份证",
-                    value: 6542319984523
+                    value: ""
                 },
                 {
                     key: "姓名",
-                    value: "张三"
+                    value: ""
                 },
                 {
                     key: "地址",
-                    value: "12栋6单元608"
+                    value: ""
                 }
             ],
         }
@@ -40,6 +40,12 @@ export default {
         jumpToSeeting(){
             this.$router.push('/system/setting?type=modify')
         }
+    },
+    created(){
+        this.info[0].value = this.$store.state.userInfo.community_info.id_number;
+        this.info[1].value = this.$store.state.userInfo.community_info.username;
+        this.info[2].value = this.$store.state.userInfo.community_info.community_address;
+        this.avatar = require(this.$store.state.userInfo.community_info.face_image_url);
     }
 }
 </script>
@@ -52,6 +58,9 @@ export default {
     #content_wrapper{
         flex: 1 1 70vw;
         min-height: 50vh;
+        .user_avatar{
+            max-width: 100%;
+        }
         .info_wrapper{
             padding-top: 40px;
         }

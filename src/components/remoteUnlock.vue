@@ -32,6 +32,9 @@ export default {
         openLock(){
 
         }
+    },
+    created(){
+        this.options = this.$store.userInfo.community_locks;
     }
 }
 </script>

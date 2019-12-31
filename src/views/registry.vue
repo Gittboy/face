@@ -30,6 +30,7 @@
 
 <script>
 import Vue from 'vue'
+import {mapGetters} from 'vuex'
 import {Toast, Button, Header} from 'mint-ui'
 Vue.component(Button.name, Button)
 Vue.component(Header.name, Header)
@@ -53,7 +54,13 @@ export default {
             if(this.timer){
                 return ;
             } else {
-                this.http.get()
+                this.http.get("/v1/api/sendsms?phone="+this.phone).then(res=>{
+                    if(res.data.code!=1){
+                        Toast(res.reason);
+                    }else {
+                        Toast("获取验证码成功");
+                    }
+                });
                 this.timer = setInterval(function(){
                     _this.text = _this.counter + "秒后刷新";
                     _this.counter--;
@@ -68,7 +75,7 @@ export default {
         },
         submit(){
             if(this.phone && this.captcha_code){
-                this.http.post(`/v1/api/terminal/community/signin?user_id=xxxx&salt=randomsalt&token=hasedtoken&identity=identity`, 
+                this.http.post(`/v1/api/terminal/community/signin?${this.$store.getters.apiVerifi}`, 
                 {
                     "phone": this.phone,
                     "captcha_code": this.captcha_code
@@ -76,16 +83,24 @@ export default {
                     if(res.data.code!=1){
                         Toast(res.data.reason)
                     }else{
-                        this.$router.go('/index/setting?type=uploadInfo')
+                        this.$router.push({
+                            path: '/index/registry/uploadInfo',
+                            query: {
+                                from: 'uploadInfo',
+                                phone: this.phone
+                            }
+                        })
                     }
                 })
 
             }else{
-                Toast("请输入完信息");
-                this.$router.push('/index/registry/uploadInfo')
+                Toast("请输入完整信息");
             }
             
         }
+    },
+    computed: {
+        ...mapGetters(['apiVerifi'])
     }
 }
 </script>

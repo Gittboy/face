@@ -26,6 +26,9 @@ const routes = [{
             },
             children: [{
                 path: 'uploadInfo',
+                meta: {
+                    title: "完善个人信息"
+                },
                 components: {
                     uploadInfo: () =>
                         import ('../views/setting.vue')

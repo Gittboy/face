@@ -23,7 +23,7 @@ export default {
     },
     // 获取开锁码
     getLockcoe(){
-        this.http.post(`/v1/api/terminal/openlock/code?user_id=xxx&community_id=xxxxxx&salt=randomsalt&token=hasedtoken&identity=identity`,
+        this.http.post(`/v1/api/terminal/openlock/code?${this.$store.getters.apiVerifi}`,
         {"community_locks":["south_1","gate_1"]}).then(res=> {
             if(res.data.code!=1){
                 Toast(res.data.reason)

@@ -63,7 +63,16 @@ export default {
         }
     },
     created(){
-        console.log("系统页跳转成功")
+        if(!this.$store.state.userInfo){
+            this.http.get("/v1/api/terminal/community/accepted?"+this.$store.getters.apiVerifi).then(res=>{
+                if(res.data.code!=1){
+                    Toast("获取信息失败, 请重试");
+                }else {
+                    console.log(res, res.data, res.data.communities[0])
+                    this.$store.commit("saveUserInfo", res.data.communities[0]);
+                }
+            })
+        }
     }
     
 }

@@ -41,27 +41,43 @@ export default {
     data(){
         return {
             tip: "请输入开锁码",
-            tempid: "",
-            links: [
-            ]
+            tempid: ""
         }
     },
     methods: {
         receive(value){
             this.tempid = value;
-            console.log(this.tempid)
+            console.log(this.tempid);
         },
         tempopen(){
             this.http.post(`/v1/api/terminal/openlock/code?${this.$store.getters.apiVerifi}`,
             {"auth_code":this.tempid}).then(res=>{
                 if(res.data.code!=1){
-                    Toast(res.data.reason)
+                    Toast('开锁码错误或已失效，请重试');
                 }else{
-                    Toast('开锁成功')
+                    Toast('开锁成功');
                 }
+                // switch (res.data.code) {
+                //     case 1: {
+                //         Toast('开锁成功！');
+                //         break;
+                //     }
+                //     case 0: {
+                //         Toast('开锁失败, 请重试');
+                //         break;
+                //     }
+                //     case -1: {
+                //         Toast('回话已过期，请重新扫描');
+                //         break;
+                //     }
+                //     case -2: {
+                //         Toast('开锁码已失效，请重新获取开锁码');
+                //         break;
+                //     }
+                // }
             }, err=>{
                 Toast({
-                    message: err
+                    message: '服务器忙, 请重试'
                     // icon font 的class名
                     // icon图表类  icon- 具体的图标类型
                     // iconClass: 'icon icon-success'  
@@ -72,14 +88,16 @@ export default {
     },
     created(){
         console.log('主页加载ok');
-        this.http.get(officalcount/getToken).then(res=>{
+        this.http.get('http://facerke.epplink.net/officalcount/getToken').then(res=>{
+            console.log(res, res.data);
             this.$store.commit('saveVerification', res.data);
-            if(res.data.isRegistered){
+            if(res.data.isSignIn){
                 this.$router.replace('/system');
             }
         })
     }
 }
+//http://facerke.epplink.net/mobile/123
 </script>
 
 <style lang="less" scoped>
