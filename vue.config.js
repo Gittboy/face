@@ -1,4 +1,5 @@
 module.exports = {
+	  //  配置打包后静态资源的根目录
     publicPath: "/mobile/",
     devServer: {
         // open: true,
@@ -13,8 +14,8 @@ module.exports = {
             "/api": {
                 target: "https://www.csdn.net", // 跨域的目标服务器地址
                 changeOrigin: true, // 允许 开启跨域模式
-                secure: false, // https 需要非安全模式
-                ws: true,
+                secure: false, // https 需要关闭安全模式
+                ws: true,  // 开启websocket传输协议
                 pathRewrite: {
                     "^/api": "/api"
                 }
