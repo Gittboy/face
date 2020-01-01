@@ -15,16 +15,18 @@
 import Vue from 'vue'
 import {Radio, Button, Toast} from 'mint-ui'
 Vue.component(Radio.name, Radio)
-Vue.component(Button.name, Button) 
+Vue.component(Button.name, Button)
 export default {
     data(){
         return {
             //  选中的门的字段值
-            value: "东门",
+            value: "",
             options: [
             ]
         }
     },
+		computed: {
+		},
     methods: {
         openLock(){
 
@@ -36,7 +38,8 @@ export default {
             option.label = item.lock_name;
             option.value = item.lock_id;
             this.options.push(option);
-        })
+        });
+				this.radio = this.options[0].value;
     }
 }
 </script>
@@ -47,6 +50,9 @@ export default {
     .selects_wrap{
         margin-top: 30vh;
         margin-bottom: 50px;
+				/deep/ .mint-cell-wrapper{
+					margin-top: -1px;
+				}
     }
     .mint-button--large{
         width: 40vw;

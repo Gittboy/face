@@ -1,11 +1,11 @@
 <template>
     <div id="self_center">
         <div id="content_wrapper">
-            <img :src="avatar" alt="个人头像" class="user_avatar">
+            <!-- <img :src="avatar" alt="个人头像" class="user_avatar"> -->
+						<van-image width="70vw" height="70vw" :src="avatar" fit="cover"></van-image>
             <div class="info_wrapper">
                 <p v-for="(item, index) in info" :key="index">{{item.key+" "+':'+" "+item.value}}</p>
             </div>
-            <!-- <router-link to="/system/setting" class="jump_setting">修改信息</router-link> -->
             <mt-button type="primary" id="setting" size='normal' @click.native="jumpToSeeting">修改信息</mt-button>
         </div>
         <router-view name="setting"></router-view>
@@ -16,6 +16,9 @@
 import Vue from 'vue'
 import {Button} from 'mint-ui'
 Vue.component(Button.name, Button)
+import { Image } from 'vant'
+import 'vant/lib/image/style';
+Vue.use(Image)
 export default {
     data(){
         return {
@@ -42,10 +45,12 @@ export default {
         }
     },
     created(){
-        this.info[0].value = this.$store.state.userInfo.community_info.id_number;
-        this.info[1].value = this.$store.state.userInfo.community_info.username;
-        this.info[2].value = this.$store.state.userInfo.community_info.community_address;
-        this.avatar = this.$store.state.userInfo.community_info.face_image_url;
+			if(!this.avatar||this.$route.query.from=='modified'){
+				this.info[0].value = this.$store.state.userInfo.community_info.id_number;
+				this.info[1].value = this.$store.state.userInfo.community_info.username;
+				this.info[2].value = this.$store.state.userInfo.community_info.community_address;
+				this.avatar = this.$store.state.userInfo.community_info.face_image_url;
+			}
     }
 }
 </script>

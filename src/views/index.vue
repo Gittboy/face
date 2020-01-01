@@ -88,7 +88,7 @@ export default {
     },
     created(){
         console.log('主页加载ok');
-        this.http.get('http://facerke.epplink.net/officalcount/getToken').then(res=>{
+        this.http.get('http://facerke.epplink.net/officalcount/getToken?user_id=c952f21e13cbb61390a5a965604ab9ba&community_id=26').then(res=>{
             console.log(res, res.data);
             this.$store.commit('saveVerification', res.data);
             this.$store.commit('getJssdkConfig', JSON.parse(res.data.jssdkConfig));

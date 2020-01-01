@@ -9,7 +9,10 @@
                     <span class="avatar_label">人脸头像</span>
                     <span class="mintui mintui-tupianshangchuanmian avatar_upload" @click="chooseAvatar"></span>
                 </div>
-                <div id="avatarShow" ref="avatar"></div>
+								<!-- DOM操作动态显示与隐藏 -->
+                <!-- <div id="avatarShow" ref="avatar" @click="reselect"></div> -->
+								<!-- 收据驱动 -->
+								<van-image id="avatarShow" @click.native="reselect" v-if="user_avatar" :src='user_avatar' round fit="cover"></van-image>
             </div>
             <!-- <mt-field label="人脸头像" placeholder="请选择头像" v-model="user_avatar"></mt-field> -->
             <mt-field label="身份证号" placeholder="请输入身份证号" type="number" v-model="identify"></mt-field>
@@ -21,7 +24,7 @@
             <div class="selectWrapper">
                 <span id="selectLabel">住址</span>
                 <span v-if="address" id="address">{{address}}</span>
-                <mt-button id="selectBtn" type="primary" @click.native="handleSelect">{{selectBtn}}</mt-button>
+                <mt-button id="selectBtn" type="primary" size="small" @click.native="handleSelect">{{selectBtn}}</mt-button>
             </div>
             <!-- <van-picker :columns="columns" @change="onChange" /> -->
             <!-- <van-area :area-list="areaList" :columns-num="3" title="选择住址" /> -->
@@ -35,13 +38,14 @@
 
 <script>
 import Vue from 'vue';
-import {Field, Button} from 'mint-ui';
+import {Field, Button, MessageBox} from 'mint-ui';
 Vue.component(Field.name, Field);
 Vue.component(Button.name, Button);
-import { Area, Popup } from 'vant';
+import { Area, Popup, Image } from 'vant';
 import 'vant/lib/area/style';
 import 'vant/lib/popup/style';
-Vue.use(Area).use(Popup);
+import 'vant/lib/image/style';
+Vue.use(Area).use(Popup).use(Image);
 import areas from './areas';
 export default {
     data(){
@@ -49,7 +53,7 @@ export default {
             selected: false,
             from: '',
             title: "个人信息修改",
-            user_avatar: "",
+            user_avatar: '',
             identify: "",
             name: "",
             building: "",
@@ -60,41 +64,7 @@ export default {
             address: "",
             selectBtn: '选择住址',
             show: false,
-            // citys: {
-            //     '浙江': ['杭州', '宁波', '温州', '嘉兴', '湖州'],
-            //     '福建': ['福州', '厦门', '莆田', '三明', '泉州']
-            // },
-            areaList: areas,
-            // areaList: {
-            //     province_list: {
-            //         100000: 'a',
-            //         200000: 'b',
-            //         300000: 'c',
-            //     },
-            //     city_list: {
-            //         101000: 'aa',
-            //         102000: 'ab',
-            //         103000: 'ac'
-            //     },
-            //     country_list: {
-
-            //     }
-            // }
-        }
-    },
-    computed: {
-        columns() {
-            // return [
-            //     {
-            //         values: Object.keys(this.citys),
-            //         className: 'column1'
-            //     },
-            //     {
-            //         values: this.citys['浙江'],
-            //         className: 'column2',
-            //         defaultIndex: 2
-            //     }
-            // ]
+            areaList: areas
         }
     },
     methods: {
@@ -102,27 +72,39 @@ export default {
             this.$router.go(-1);
         },
         chooseAvatar(){
+						this.$refs.avatarSelect.style.visibility = 'hidden';
+						//  Vue项目中图片地址必须使用 require(url) 否则不会显示
+						// this.$refs.avatar.style.backgroundImage = 'url('+this.$store.state.userInfo.community_info.face_image_url+')';
+						// this.$refs.avatar.style.display = 'block';
+						this.user_avatar = this.$store.state.userInfo.community_info.face_image_url;
+						console.log(this.user_avatar);
             wx.chooseImage({
-                count: 1, // 默认9
-                sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-                success: function (res) {
-                    wx.getLocalImgData({
-                        localId: res.localIds[0], // 图片的localID
-                        success: function (res) {
-                            this.user_avatar = res.localData; // localData是图片的base64数据，可以用img标签显示
-                            // var localIds = res.localIds;  返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-                            this.$refs.avatarSelect.style.visibility = 'hidden';
-                            //  Vue项目中图片地址必须使用 require(url) 否则不会显示
-                            this.$refs.avatar.style.backgroundImage = 'url('+res.localData+')';
-                            this.$refs.avatar.style.display = 'block';
-                        }
-                    });
-
-                    
-                }
-            });
+							count: 1, // 默认9
+							sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+							sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+							success: function (res) {
+							  let localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+								wx.getLocalImgData({
+									localId: localIds[0], // 图片的localID
+									success: function (res) {
+										this.user_avatar = res.localData; // localData是图片的base64数据，可以用img标签显示
+										//  获取并保存图片base64数据后  通过image 或者元素的background属性展示
+										this.$refs.avatarSelect.style.visibility = 'hidden';
+										this.$refs.avatar.style.background = 'url('+res.localData+')';
+										this.$refs.avatar.style.display = 'block';
+									}
+								});
+							}
+						});
         },
+				reselect(){
+					MessageBox.confirm('确定要重新选择吗？', '提示').then(action => {
+						// this.$refs.avatar.style.display = 'none';
+						this.user_avatar = "";
+						this.$refs.avatarSelect.style.visibility = 'visible';
+					})
+					
+				},
         handleSelect(){
             // 底部弹出层  弹出层加载三级联动选项卡
             this.show = true;
@@ -158,7 +140,7 @@ export default {
     },
     created(){
         // 配置微信sdk
-        console.log(wx, this.$store.state.verification.jssdkConfig);
+        console.log(wx, this.$store.state.jssdkConfig);
         wx.config(this.$store.state.jssdkConfig);
         wx.ready(function(){alert('wx ready')});
         wx.error(function(res){console.log(res)});
@@ -211,11 +193,12 @@ export default {
                 // display: inline-block;
                 background: center/cover;
                 // background-image: url(../assets/avatar.jpg);
-                display: none;
+                // display: none;
             }
         }
         /deep/ .mint-cell-wrapper{
-            padding-right: 10vw;
+            padding-right: 5vw;
+						margin-top: -1px;
         }
         .selectWrapper{
             width: 100%;
@@ -230,7 +213,7 @@ export default {
                 text-align: center;
             }
             #address{
-                margin-right: 10px;
+                margin-right: 5px;
                 max-width: 120px;
             }
             #selectBtn{

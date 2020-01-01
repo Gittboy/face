@@ -19,7 +19,13 @@ module.exports = {
                 pathRewrite: {
                     "^/api": "/api"
                 }
-            }
+            },
+						"/face": {
+							target: "http://facerke.epplink.net",
+							changeOrigin: true,
+							secure: false,
+							ws: true,
+						}
         }
     },
 }
