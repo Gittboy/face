@@ -29,8 +29,8 @@ export default {
         // 获取开锁码
         getLockcode(){
             let _this = this;
-            // this.http.get(`/v1/api/terminal/openlock/code?${this.$store.getters.apiVerifi}`,  
-            this.http.get('http://facerke.epplink.net/v1/api/terminal/openlock/code?user_id=c952f21e13cbb61390a5a965604ab9ba&community_id=26').
+            this.http.get(`/v1/api/terminal/openlock/code?${this.$store.getters.apiVerifi}`). 
+            // this.http.get('http://facerke.epplink.net/v1/api/terminal/openlock/code?user_id=c952f21e13cbb61390a5a965604ab9ba&community_id=26').
             then(res=> {
                 if(res.data.code!=1){
                     Toast(res.data.reason)

@@ -22,14 +22,33 @@
             <mt-field label="单元号" placeholder="请输入单元号" type="number" v-model="unit_num"></mt-field>
             <mt-field label="门牌号" placeholder="请输入门牌号" type="number" v-model="gate_num"></mt-field> -->
             <div class="selectWrapper">
-                <span id="selectLabel">住址</span>
-                <span v-if="address" id="address">{{address}}</span>
-                <mt-button id="selectBtn" type="primary" size="small" @click.native="handleSelect">{{selectBtn}}</mt-button>
+                <span class="selectLabel">楼号</span>
+                <span v-if="buildText" class="address">{{ buildText }}</span>
+                <mt-button type="primary" size="small" @click.native="selectBuild">选择楼号</mt-button>
+            </div>
+            <div class="selectWrapper">
+                <span class="selectLabel">单元号</span>
+                <span v-if="unitText" class="address">{{ unitText }}</span>
+                <mt-button type="primary" size="small" @click.native="selectUnit">选择单元号</mt-button>
+            </div>
+            <div class="selectWrapper">
+                <span class="selectLabel">门牌号</span>
+                <span v-if="gateText" class="address">{{ gateText }}</span>
+                <mt-button type="primary" size="small" @click.native="selectGate">选择门牌号</mt-button>
             </div>
             <!-- <van-picker :columns="columns" @change="onChange" /> -->
             <!-- <van-area :area-list="areaList" :columns-num="3" title="选择住址" /> -->
-            <van-popup v-model="show" round position="bottom" :style="{ height: '40%' }">
-                <van-area :area-list="areaList" :columns-num="3" title="选择住址" @cancel="show=false;" @confirm="confirm" />
+            <van-popup v-model="showBuild" round position="bottom" :style="{ height: '40%' }">
+                <!-- <van-area :area-list="areaList" :columns-num="3" title="选择住址" @cancel="show=false;" @confirm="confirm" /> -->
+                <van-picker :columns="buildList" show-toolbar :fedault-index="0" @confirm="confirmBuild" @change="changeBuild" @cancel="cancelBuild"></van-picker>
+            </van-popup>
+            <van-popup v-model="showUnit" round position="bottom" :style="{ height: '40%' }">
+                <!-- <van-area :area-list="areaList" :columns-num="3" title="选择住址" @cancel="show=false;" @confirm="confirm" /> -->
+                <van-picker :columns="unitList" show-toolbar @confirm="confirmUnit" @change="changeUnit" @cancel="cancelUnit"></van-picker>
+            </van-popup>
+            <van-popup v-model="showGate" round position="bottom" :style="{ height: '40%' }">
+                <!-- <van-area :area-list="areaList" :columns-num="3" title="选择住址" @cancel="show=false;" @confirm="confirm" /> -->
+                <van-picker :columns="gateList" show-toolbar @confirm="confirmGate" @change="changeGate" @cancel="cancelGate"></van-picker>
             </van-popup>
         </div>
         <mt-button type="primary" size="large" @click.native="submit">提交审核</mt-button>
@@ -38,15 +57,17 @@
 
 <script>
 import Vue from 'vue';
-import {Field, Button, MessageBox} from 'mint-ui';
+import {Field, Button, MessageBox, Toast} from 'mint-ui';
 Vue.component(Field.name, Field);
 Vue.component(Button.name, Button);
-import { Area, Popup, Image } from 'vant';
+import { Area, Picker, Popup, Image, } from 'vant';
 import 'vant/lib/area/style';
 import 'vant/lib/popup/style';
 import 'vant/lib/image/style';
-Vue.use(Area).use(Popup).use(Image);
+import 'vant/lib/picker/style';
+Vue.use(Area).use(Popup).use(Image).use(Picker);
 import areas from './areas';
+import { thistle } from 'color-name';
 export default {
     data(){
         return {
@@ -56,15 +77,59 @@ export default {
             user_avatar: '',
             identify: "",
             name: "",
-            building: "",
-            unit: "",
-            hotUpdate: "",
             phone_num: "",
             showPhone: true,
-            address: "",
-            selectBtn: '选择住址',
-            show: false,
-            areaList: areas
+            showBuild: false,
+            showUnit: false,
+            showGate: false,
+            // areaList: areas
+            buildInfo: {"unitInfo":[{"id":3,"title":"一单元","parent":33},{"id":4,"title":"二单元","parent":33},{"id":5,"title":"三单元","parent":34},{"id":6,"title":"四单元","parent":34}],"buildingInfo":{"33":"22号楼","34":"23号楼"},"householdInfo":[{"title":"101","id":1,"parent":3},{"title":"102","id":2,"parent":3},{"title":"201","id":3,"parent":3},{"title":"202","id":4,"parent":3},{"title":"101","id":5,"parent":4},{"title":"102","id":6,"parent":4},{"title":"103","id":7,"parent":4},{"title":"201","id":8,"parent":4},{"title":"202","id":9,"parent":4},{"title":"203","id":10,"parent":4},{"title":"301","id":11,"parent":4},{"title":"302","id":12,"parent":4},{"title":"303","id":13,"parent":4},{"title":"101","id":14,"parent":5},{"title":"101","id":15,"parent":6},{"title":"102","id":16,"parent":6},{"title":"201","id":17,"parent":6},{"title":"202","id":18,"parent":6}]},
+            tempBuild: "",
+            selectedBuild: "",
+            buildText: "",
+            tempUnit: "",
+            selectedUnit: "",
+            unitText: "",
+            tempGate: "",
+            selectedGate: "",
+            gateText: "",
+        }
+    },
+    computed: {
+        buildList(){
+            let arrLabel = [];
+            let arrValue = [];
+            let buildInfo = this.buildInfo.buildingInfo;
+            for(var key in buildInfo){
+                arrLabel.push({value: key, text: buildInfo[key]});
+            }
+            return arrLabel;
+        },
+        unitList(){
+            let arrValue = [];
+            let unitInfo = this.buildInfo.unitInfo;
+            let parent = parseInt(this.selectedBuild);
+            if(this.selectedBuild){
+                unitInfo.forEach(item=> {
+                    if(item.parent==parent){
+                        arrValue.push({value: item.id, text: item.title})
+                    }
+                })
+            }
+            return arrValue;
+        },
+        gateList(){
+            let arrValue = [];
+            let household = this.buildInfo.householdInfo;
+            let parent = this.selectedUnit;
+            if(this.selectedUnit){
+                household.forEach(item=> {
+                    if(item.parent==parent){
+                        arrValue.push({value: item.id, text: item.title})
+                    }
+                })
+            }
+            return arrValue;
         }
     },
     methods: {
@@ -108,15 +173,80 @@ export default {
             })
             
         },
-        handleSelect(){
-            // 底部弹出层  弹出层加载三级联动选项卡
-            this.http.get("http://facerke.epplink.net/officalcount/getCommunityInfo").then(res=> {
-                console.log(res.data);
-                
-                this.show = true;
-            }, err=> {
-                console.log(err);
-            })
+        selectBuild(){
+            // 获取数据
+            // this.http.get("http://facerke.epplink.net/officalcount/getCommunityInfo").then(res=> {
+            //     console.log(res.data);
+            //     this.buildInfo = res.data;
+            //     this.show = true;
+            // }, err=> {
+            //     console.log(err);
+            // })
+            this.showBuild = true;
+            this.tempBuild = this.tempBuild?this.tempBuild:0;
+            console.log(this.tempBuild);
+        },
+        confirmBuild(){
+            this.selectedBuild = this.buildList[this.tempBuild].value;
+            this.buildText = this.buildList[this.tempBuild].text;
+            this.selectedUnit = "";
+            this.unitText = "";
+            this.selectedGate = "";
+            this.gateText = "";
+            this.showBuild = false;
+        },
+        cancelBuild(){
+            this.showBuild = false;
+        },
+        changeBuild(picker, value, index){
+            this.tempBuild = index;
+            console.log(this.tempBuild);
+        },
+        selectUnit(){
+            if(this.selectedBuild){
+                this.showUnit = true;
+                console.log(this.unitList);
+                this.tempUnit = this.tempUnit?this.tempUnit:0;
+            }else {
+                Toast("请先选择楼号");
+            }
+        },
+        changeUnit(picker, value, index){
+            this.tempUnit = index;
+            console.log(this.tempUnit);
+        },
+        cancelUnit(){
+            this.showUnit = false;
+        },
+        confirmUnit(){
+            this.selectedUnit = this.unitList[this.tempUnit].value;
+            this.unitText = this.unitList[this.tempUnit].text;
+            console.log(this.unitText, this.selectedUnit);
+            this.selectedGate = "";
+            this.gateText = "";
+            this.showUnit = false;
+        },
+        selectGate(){
+            if(this.selectedBuild&&this.selectedUnit){
+                this.showGate = true;
+                console.log(this.gateList);
+                this.tempGate = this.tempGate?this.tempGate:0;
+            }else {
+                Toast("请先选择楼号和单元号");
+            }
+        },
+        changeGate(picker, value, index){
+            this.tempGate = index;
+            console.log(this.tempGate);
+        },
+        cancelGate(){
+            this.showGate = false;
+        },
+        confirmGate(){
+            this.selectedGate = this.gateList[this.tempGate].value;
+            this.gateText = this.gateList[this.tempGate].text;
+            console.log(this.selectedGate, this.gateText);
+            this.showGate = false;
         },
         confirm(res){
             let address = "";
@@ -134,22 +264,25 @@ export default {
         },
         //  提交数据
         submit(){
-            this.http.post("http://facerke.epplink.net/v1/api/terminal/community/apply?"+this.$store.getters.apiVerifi, {
-                "id_number": this.phone_num,
+            if(this.phone_num&&this.identify&&this.name&&this.selectedBuild&&this.selectedUnit&&this.selectedGate&&this.user_avatar){
+                this.http.post("http://facerke.epplink.net/v1/api/terminal/community/apply?"+this.$store.getters.apiVerifi, {
+                "id_number": this.identify,
                 "phone": this.phone_num,
                 "username": this.name,
                 "community_id": this.$store.state.verification.communityId,
-                "building": this.building,
-                "unit": this.unit,
-                "household": this.household,
+                "building": this.selectedBuild,
+                "unit": this.selectedUnit,
+                "household": this.selectedGate,
                 "role": "01",
                 "pid": "0",
                 "face_image": this.user_avatar
-            }).then(res=> {
-                this.$router.replace("/system");
-            }, err=>{
-                console.log(err);
-            })
+                }).then(res=> {
+                    Toast("信息提交成功！")
+                    // this.$router.replace("/system");
+                }, err=>{
+                    console.log(err);
+                })
+            } 
         }
     },
     created(){
@@ -221,24 +354,22 @@ export default {
             text-align: left;
             display: flex;
             align-items: center;
-            #selectLabel{
+            .selectLabel{
                 font-size: 16px;
                 width: 105px;
                 text-align: center;
             }
-            #address{
+            .address{
                 margin-right: 5px;
                 max-width: 120px;
-            }
-            #selectBtn{
-
+                min-width: 48px;
             }
         }
     }
     .mint-button--large{
         width: 70vw;
         margin-left: 15vw;
-        margin-top: 15vh;
+        margin-top: 5vh;
     }
 }
 </style>
