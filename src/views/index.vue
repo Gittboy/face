@@ -1,27 +1,11 @@
 <template>
     <div class="root">
-        <!-- <van-row>
-            <van-col span="16" offset="4">
-                <div class="login_wrap">
-                    <van-cell-group>
-                        <van-field v-model="tempid"></van-field>
-                    </van-cell-group>
-                </div>
-            </van-col>
-        </van-row> -->
-        <!-- <div class="login_wrap">
-            <mt-field label="请输入开锁码"></mt-field>
-            <van-button type="primary" class="mybtn">临时开锁</van-button>
-            <nav>
-                <router-link></router-link>
-            </nav>
-        </div> -->
         <div class="login_wrap">
             <myInput :holder="tip" @delivery="receive"/>
             <!-- <mt-field placeholder="请输入开锁码" id="field_id" v-model="tempid"></mt-field> -->
             <mt-button type="primary" class="mybtn" @click="tempopen">临时开锁</mt-button>
             <nav class="navs">
-                <!-- <router-link to="login/system" class="left">进入系统</router-link> -->
+                <!-- <router-link to="index/system" class="left">进入系统</router-link> -->
                 <router-link to="index/registry" class="right">用户注册</router-link>
             </nav>
             <router-view name="registry"></router-view>
@@ -88,6 +72,7 @@ export default {
     },
     created(){
         console.log('主页加载ok');
+        // http://facerke.epplink.net/
         this.http.get('http://facerke.epplink.net/officalcount/getToken?user_id=c952f21e13cbb61390a5a965604ab9ba&community_id=26').then(res=>{
             console.log(res, res.data);
             this.$store.commit('saveVerification', res.data);

@@ -2,7 +2,7 @@
     <div id="self_center">
         <div id="content_wrapper">
             <!-- <img :src="avatar" alt="个人头像" class="user_avatar"> -->
-						<van-image width="70vw" height="70vw" :src="avatar" fit="cover"></van-image>
+			<van-image width="70vw" height="70vw" :src="avatar" fit="cover"></van-image>
             <div class="info_wrapper">
                 <p v-for="(item, index) in info" :key="index">{{item.key+" "+':'+" "+item.value}}</p>
             </div>

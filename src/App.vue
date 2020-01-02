@@ -1,7 +1,6 @@
 <template>
   <div id="app" class="new_page">
     <router-view></router-view>
-    <router-view name="jump"></router-view>
   </div>
 </template>
 

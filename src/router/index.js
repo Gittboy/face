@@ -38,10 +38,8 @@ const routes = [{
     },
     {
         path: '/system',
-        components: {
-            jump: () =>
-                import ('../views/system.vue')
-        },
+        component: () =>
+            import ('../views/system.vue'),
         redirect: "/system/tempUnlock",
         children: [{
             path: "remoteUnlock",
