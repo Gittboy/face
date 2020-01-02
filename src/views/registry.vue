@@ -94,13 +94,6 @@ export default {
                 })
             }else{
                 Toast("请输入完整信息");
-                this.$router.push({
-                    path: '/index/registry/uploadInfo',
-                    query: {
-                        from: 'uploadInfo',
-                        phone: this.phone
-                    }
-                })
             }
             
         }

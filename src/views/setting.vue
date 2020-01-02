@@ -51,7 +51,7 @@
                 <van-picker :columns="gateList" show-toolbar @confirm="confirmGate" @change="changeGate" @cancel="cancelGate"></van-picker>
             </van-popup>
         </div>
-        <mt-button type="primary" size="large" @click.native="submit">提交审核</mt-button>
+        <mt-button type="primary" size="large" @click.native="debounceSubmit">提交审核</mt-button>
     </div>
 </template>
 
@@ -130,6 +130,9 @@ export default {
                 })
             }
             return arrValue;
+        },
+        debounceSubmit(){
+            return this.debounce(this.submit, 1000);
         }
     },
     methods: {
@@ -144,15 +147,18 @@ export default {
             // this.$refs.avatar.style.display = 'block';
             // this.user_avatar = this.$store.state.userInfo.community_info.face_image_url;
             // console.log(this.user_avatar);
+            console.log(wx.chooseImage, wx.getLocalImgData);
             wx.chooseImage({
                 count: 1, // 默认9
                 sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
                 sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
                 success: function (res) {
+                    console.log('wx.chooseImage ok');
                     var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
                     wx.getLocalImgData({
                         localId: localIds[0], // 图片的localID
                         success: function (res) {
+                            console.log('wx.getLocalImgData ok');
                             console.log('123'+res.localData);
                             console.log(this, _this);
                             _this.$refs.avatarSelect.style.visibility = 'hidden';
@@ -258,8 +264,9 @@ export default {
             this.selectBtn = '重新选择';
             this.show = false;
         },
-        //  提交数据
+        //  提交数据    
         submit(){
+            alert('ok');
             if(this.phone_num&&this.identify&&this.name&&this.selectedBuild&&this.selectedUnit&&this.selectedGate&&this.user_avatar){
                 this.http.post("http://facerke.epplink.net/v1/api/terminal/community/apply?"+this.$store.getters.apiVerifi, {
                 "id_number": this.identify,
@@ -293,8 +300,6 @@ export default {
         // 配置微信sdk
         console.log(wx, this.$store.state.jssdkConfig);
         wx.config(this.$store.state.jssdkConfig);
-        wx.ready(function(){alert('wx ready')});
-        wx.error(function(res){console.log(res)});
         this.from = this.$route.query.from;
         if(this.from=='uploadInfo'){
             this.title = '完善个人信息',
