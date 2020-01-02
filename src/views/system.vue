@@ -56,8 +56,8 @@ export default {
         }
     },
     created(){
-        // this.http.get("/v1/api/terminal/community/accepted?"+this.$store.getters.apiVerifi).then(res=>{
-        this.http.get("http://facerke.epplink.net/v1/api/terminal/community/accepted?user_id=c952f21e13cbb61390a5a965604ab9ba&community_id=26").then(res=>{
+        this.http.get("http://facerke.epplink.net/v1/api/terminal/community/accepted?"+this.$store.getters.apiVerifi).then(res=>{
+        // this.http.get("http://facerke.epplink.net/v1/api/terminal/community/accepted?user_id=c952f21e13cbb61390a5a965604ab9ba&community_id=26").then(res=>{
             console.log(res.data, res.data.communities[0]);
             if(res.data.code!=1){
                 Toast("获取信息失败, 请重试");

@@ -9,10 +9,10 @@
                     <span class="avatar_label">人脸头像</span>
                     <span class="mintui mintui-tupianshangchuanmian avatar_upload" @click="chooseAvatar"></span>
                 </div>
-								<!-- DOM操作动态显示与隐藏 -->
+				<!-- DOM操作动态显示与隐藏 -->
                 <!-- <div id="avatarShow" ref="avatar" @click="reselect"></div> -->
-								<!-- 收据驱动 -->
-								<van-image id="avatarShow" @click.native="reselect" v-if="user_avatar" :src='user_avatar' round fit="cover"></van-image>
+				<!-- 收据驱动 -->
+				<van-image id="avatarShow" @click.native="reselect" v-if="user_avatar" :src='user_avatar' round fit="cover"></van-image>
             </div>
             <!-- <mt-field label="人脸头像" placeholder="请选择头像" v-model="user_avatar"></mt-field> -->
             <mt-field label="身份证号" placeholder="请输入身份证号" type="number" v-model="identify"></mt-field>
@@ -72,25 +72,27 @@ export default {
             this.$router.go(-1);
         },
         chooseAvatar(){
-						// this.$refs.avatarSelect.style.visibility = 'hidden';
-						//  Vue项目中图片地址必须使用 require(url) 否则不会显示
-						// this.$refs.avatar.style.backgroundImage = 'url('+this.$store.state.userInfo.community_info.face_image_url+')';
-						// this.$refs.avatar.style.display = 'block';
-						// this.user_avatar = this.$store.state.userInfo.community_info.face_image_url;
-						// console.log(this.user_avatar);
+            let _this = this;
+            // this.$refs.avatarSelect.style.visibility = 'hidden';
+            //  Vue项目中图片地址必须使用 require(url) 否则不会显示
+            // this.$refs.avatar.style.backgroundImage = 'url('+this.$store.state.userInfo.community_info.face_image_url+')';
+            // this.$refs.avatar.style.display = 'block';
+            // this.user_avatar = this.$store.state.userInfo.community_info.face_image_url;
+            // console.log(this.user_avatar);
             wx.chooseImage({
                 count: 1, // 默认9
                 sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
                 sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
                 success: function (res) {
-                    let localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                    var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
                     wx.getLocalImgData({
                         localId: localIds[0], // 图片的localID
                         success: function (res) {
-                            this.$refs.avatarSelect.style.visibility = 'hidden';
-                            this.user_avatar = res.localData; // localData是图片的base64数据，可以用img标签显示
+                            console.log('123'+res.localData);
+                            console.log(this, _this);
+                            _this.$refs.avatarSelect.style.visibility = 'hidden';
+                            _this.user_avatar = res.localData; // localData是图片的base64数据，可以用img标签显示
                             //  获取并保存图片base64数据后  通过image 或者元素的background属性展示
-                            
                             // this.$refs.avatar.style.background = 'url('+res.localData+')';
                             // this.$refs.avatar.style.display = 'block';
                         }
@@ -108,7 +110,13 @@ export default {
         },
         handleSelect(){
             // 底部弹出层  弹出层加载三级联动选项卡
-            this.show = true;
+            this.http.get("http://facerke.epplink.net/officalcount/getCommunityInfo").then(res=> {
+                console.log(res.data);
+                
+                this.show = true;
+            }, err=> {
+                console.log(err);
+            })
         },
         confirm(res){
             let address = "";
@@ -130,7 +138,7 @@ export default {
                 "id_number": this.phone_num,
                 "phone": this.phone_num,
                 "username": this.name,
-                "community_id": this.$store.verification.community_id,
+                "community_id": this.$store.state.verification.communityId,
                 "building": this.building,
                 "unit": this.unit,
                 "household": this.household,

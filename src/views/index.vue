@@ -72,10 +72,12 @@ export default {
     },
     created(){
         console.log('主页加载ok');
-        // http://facerke.epplink.net/
-        this.http.get('http://facerke.epplink.net/officalcount/getToken?user_id=c952f21e13cbb61390a5a965604ab9ba&community_id=26').then(res=>{
+        // 本地测试  query ?user_id=c952f21e13cbb61390a5a965604ab9ba&community_id=26
+        this.http.get('http://facerke.epplink.net/officalcount/getToken').then(res=>{
             console.log(res, res.data);
+            //  保存验证信息
             this.$store.commit('saveVerification', res.data);
+            //  保存 jssdk 配置信息
             this.$store.commit('getJssdkConfig', JSON.parse(res.data.jssdkConfig));
             if(res.data.isSignIn){
                 this.$router.replace('/system');

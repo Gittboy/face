@@ -28,14 +28,15 @@ export default {
     methods: {
         // 获取开锁码
         getLockcode(){
-            // this.http.post(`/v1/api/terminal/openlock/code?${this.$store.getters.apiVerifi}`,  user_id=c952f21e13cbb61390a5a965604ab9ba&community_id=26
-            this.http.post('http://facerke.epplink.net/v1/api/terminal/openlock/code?user_id=c952f21e13cbb61390a5a965604ab9ba&community_id=26',
-            {"community_locks":["south_1","gate_1"]}).then(res=> {
+            let _this = this;
+            // this.http.get(`/v1/api/terminal/openlock/code?${this.$store.getters.apiVerifi}`,  
+            this.http.get('http://facerke.epplink.net/v1/api/terminal/openlock/code?user_id=c952f21e13cbb61390a5a965604ab9ba&community_id=26').
+            then(res=> {
                 if(res.data.code!=1){
                     Toast(res.data.reason)
                 }else {
-                    comsole.log(res.data);
-                    this.lock_num = res.data.auth_code;
+                    _this.lock_num = res.data.reason.auth_code;
+                    console.log(res.data, _this.lock_num, res.data.reason.auth_code);
                     Toast('获取开锁码成功');
                 }
             })
@@ -78,7 +79,7 @@ export default {
                 text-indent: 10px;
                 padding: 10px 10px;
                 font-weight: bold;
-                // min-width: 130px;
+                min-width: 170.2px;
                 min-height: 30px;
             }
         }

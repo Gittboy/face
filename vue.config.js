@@ -20,13 +20,13 @@ module.exports = {
                     "^/api": "/api"
                 }
             },
-            "/face": {
+            "/officalcount": {
                 target: "http://facerke.epplink.net/",
                 changeOrigin: true,
                 secure: false,
                 ws: true,
                 pathRewrite: {
-                    "^/face": ""
+                    "^/officalcount": ""
                 }
             }
         }

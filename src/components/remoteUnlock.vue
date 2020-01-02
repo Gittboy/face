@@ -25,11 +25,21 @@ export default {
             ]
         }
     },
-		computed: {
-		},
+    computed: {
+    },
     methods: {
         openLock(){
-
+            this.http.post("/v1/api/terminal/openlock/direct?"+this.$store.getters.apiVerifi, {
+                "community_locks": this.value
+            }).then(res=> {
+                if(res.data.code!=1){
+                    Toast('开锁失败，请重试');
+                }else {
+                    Toast('开锁成功！');
+                }
+            }, err=> {
+                console.log(err);
+            })
         }
     },
     created(){
@@ -39,7 +49,6 @@ export default {
             option.value = item.lock_id;
             this.options.push(option);
         });
-				this.radio = this.options[0].value;
     }
 }
 </script>
