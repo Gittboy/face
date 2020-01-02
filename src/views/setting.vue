@@ -72,39 +72,40 @@ export default {
             this.$router.go(-1);
         },
         chooseAvatar(){
-						this.$refs.avatarSelect.style.visibility = 'hidden';
+						// this.$refs.avatarSelect.style.visibility = 'hidden';
 						//  Vue项目中图片地址必须使用 require(url) 否则不会显示
 						// this.$refs.avatar.style.backgroundImage = 'url('+this.$store.state.userInfo.community_info.face_image_url+')';
 						// this.$refs.avatar.style.display = 'block';
-						this.user_avatar = this.$store.state.userInfo.community_info.face_image_url;
-						console.log(this.user_avatar);
+						// this.user_avatar = this.$store.state.userInfo.community_info.face_image_url;
+						// console.log(this.user_avatar);
             wx.chooseImage({
-							count: 1, // 默认9
-							sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-							sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-							success: function (res) {
-							  let localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-								wx.getLocalImgData({
-									localId: localIds[0], // 图片的localID
-									success: function (res) {
-										this.user_avatar = res.localData; // localData是图片的base64数据，可以用img标签显示
-										//  获取并保存图片base64数据后  通过image 或者元素的background属性展示
-										this.$refs.avatarSelect.style.visibility = 'hidden';
-										this.$refs.avatar.style.background = 'url('+res.localData+')';
-										this.$refs.avatar.style.display = 'block';
-									}
-								});
-							}
-						});
+                count: 1, // 默认9
+                sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                success: function (res) {
+                    let localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                    wx.getLocalImgData({
+                        localId: localIds[0], // 图片的localID
+                        success: function (res) {
+                            this.$refs.avatarSelect.style.visibility = 'hidden';
+                            this.user_avatar = res.localData; // localData是图片的base64数据，可以用img标签显示
+                            //  获取并保存图片base64数据后  通过image 或者元素的background属性展示
+                            
+                            // this.$refs.avatar.style.background = 'url('+res.localData+')';
+                            // this.$refs.avatar.style.display = 'block';
+                        }
+                    });
+                }
+            });
         },
-				reselect(){
-					MessageBox.confirm('确定要重新选择吗？', '提示').then(action => {
-						// this.$refs.avatar.style.display = 'none';
-						this.user_avatar = "";
-						this.$refs.avatarSelect.style.visibility = 'visible';
-					})
-					
-				},
+        reselect(){
+            MessageBox.confirm('确定要重新选择吗？', '提示').then(action => {
+                // this.$refs.avatar.style.display = 'none';
+                this.user_avatar = "";
+                this.$refs.avatarSelect.style.visibility = 'visible';
+            })
+            
+        },
         handleSelect(){
             // 底部弹出层  弹出层加载三级联动选项卡
             this.show = true;
@@ -123,8 +124,9 @@ export default {
             this.selectBtn = '重新选择';
             this.show = false;
         },
+        //  提交数据
         submit(){
-            this.http.post("/v1/api/terminal/community/apply?"+this.$store.getters.apiVerifi, {
+            this.http.post("http://facerke.epplink.net/v1/api/terminal/community/apply?"+this.$store.getters.apiVerifi, {
                 "id_number": this.phone_num,
                 "phone": this.phone_num,
                 "username": this.name,
@@ -135,6 +137,10 @@ export default {
                 "role": "01",
                 "pid": "0",
                 "face_image": this.user_avatar
+            }).then(res=> {
+                this.$router.replace("/system");
+            }, err=>{
+                console.log(err);
             })
         }
     },
