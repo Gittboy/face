@@ -1,6 +1,6 @@
 <template>
     <div>
-        <input type="text" placeholder="请输入开锁码" class="myInput" v-model="value" @change="inputChange">
+        <input type="text" placeholder="请输入开锁码" class="myInput" v-model="value" @input="inputChange">
     </div>
 </template>
 
@@ -14,7 +14,6 @@ export default {
     props: ['holder'],
     methods: {
         inputChange(){
-            console.log(this.holder);
             this.$emit('delivery', this.value);
         }
     }

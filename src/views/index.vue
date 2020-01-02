@@ -3,7 +3,7 @@
         <div class="login_wrap">
             <myInput :holder="tip" @delivery="receive"/>
             <!-- <mt-field placeholder="请输入开锁码" id="field_id" v-model="tempid"></mt-field> -->
-            <mt-button type="primary" class="mybtn" @click="tempopen">临时开锁</mt-button>
+            <mt-button type="primary" class="mybtn" @click="deopen">临时开锁</mt-button>
             <nav class="navs">
                 <!-- <router-link to="index/system" class="left">进入系统</router-link> -->
                 <router-link to="index/registry" class="right">用户注册</router-link>
@@ -34,6 +34,7 @@ export default {
             console.log(this.tempid);
         },
         tempopen(){
+            alert('ok');
             this.http.post(`/v1/api/terminal/openlock/code?${this.$store.getters.apiVerifi}`,
             {"auth_code":this.tempid}).then(res=>{
                 if(res.data.code!=1){
@@ -69,6 +70,11 @@ export default {
             })
         }
         
+    },
+    computed: {
+        deopen(){
+            return this.debounce(this.tempopen, 300);
+        }
     },
     created(){
         console.log('主页加载ok');

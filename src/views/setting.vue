@@ -200,7 +200,6 @@ export default {
         },
         changeBuild(picker, value, index){
             this.tempBuild = index;
-            console.log(this.tempBuild);
         },
         selectUnit(){
             if(this.selectedBuild){
@@ -213,7 +212,6 @@ export default {
         },
         changeUnit(picker, value, index){
             this.tempUnit = index;
-            console.log(this.tempUnit);
         },
         cancelUnit(){
             this.showUnit = false;
@@ -229,7 +227,6 @@ export default {
         selectGate(){
             if(this.selectedBuild&&this.selectedUnit){
                 this.showGate = true;
-                console.log(this.gateList);
                 this.tempGate = this.tempGate?this.tempGate:0;
             }else {
                 Toast("请先选择楼号和单元号");
@@ -237,7 +234,6 @@ export default {
         },
         changeGate(picker, value, index){
             this.tempGate = index;
-            console.log(this.tempGate);
         },
         cancelGate(){
             this.showGate = false;
@@ -277,12 +273,20 @@ export default {
                 "pid": "0",
                 "face_image": this.user_avatar
                 }).then(res=> {
-                    Toast("信息提交成功！")
+                    console.log(res.data);
+                    console.log(this.selectedBuild, this.selectedUnit, this.selectedGate);
+                    if(res.data.code!=1){
+                        Toast(res.data.reason);
+                    }else{
+                        Toast("信息提交成功！");
+                    }
                     // this.$router.replace("/system");
                 }, err=>{
                     console.log(err);
                 })
-            } 
+            }else {
+                Toast("请完善个人信息");
+            }
         }
     },
     created(){
