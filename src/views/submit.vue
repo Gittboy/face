@@ -26,13 +26,8 @@ export default {
             //     duration: 0
             // })
             this.$refs.title.style.top = 0;
-            window.close();
         });
     },
-    beforeRouteLeave (to, from, next) {
-        console.log(to);
-        next();
-    }
 }
 </script>
 

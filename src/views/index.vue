@@ -18,6 +18,7 @@ import Vue from 'vue'
 import {Toast, Button} from 'mint-ui'
 Vue.component(Button.name, Button)
 import myInput from '../components/myInput.vue'
+import http from 'axios'
 export default {
     components: {
         myInput,
@@ -77,18 +78,23 @@ export default {
         }
     },
     beforeRouteEnter (to, from, next) {
-        this.http.get('http://facerke.epplink.net/officalcount/getToken').then(res=>{
+        /**
+         * 此时Vue实例尚未生成 无法访问this.http
+         */
+        http.get('http://facerke.epplink.net/officalcount/getToken').then(res=>{
             console.log(res, res.data);
             //  保存验证信息
             this.$store.commit('saveVerification', res.data);
-            if(res.data.isSignIn == 'true' ){
+            if(res.data.isSignIn == 'true'){
                 if (res.data.status != 'true') {
-                    this.$router.replace("/submit");
+                    next("/submit");
                 }else {
-                    this.$router.replace('/system');
+                    next('/system');
                 }
+            }else {
+                next();
             }
-        })
+        });
     }
 }
 </script>
