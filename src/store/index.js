@@ -5,7 +5,6 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        token: '',
         // 初始化 从后台获取的全局验证信息
         verification: {},
         // 对象类型需遵循Vue的响应式规则

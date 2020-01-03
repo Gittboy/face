@@ -78,7 +78,6 @@ export default {
     },
     created(){
         console.log('主页加载ok');
-        // 本地测试  query ?user_id=c952f21e13cbb61390a5a965604ab9ba&community_id=26
         this.http.get('http://facerke.epplink.net/officalcount/getToken').then(res=>{
             console.log(res, res.data);
             //  保存验证信息

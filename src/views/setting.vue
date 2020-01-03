@@ -7,7 +7,8 @@
             <div class="upload_wrapper clearfix">
                 <div ref='avatarSelect'>
                     <span class="avatar_label">人脸头像</span>
-                    <span class="mintui mintui-tupianshangchuanmian avatar_upload" @click="chooseAvatar"></span>
+                    <!-- <span class="mintui mintui-tupianshangchuanmian avatar_upload" @click="chooseAvatar"></span> -->
+                    <van-uploader v-model="fileList" :afterRead="afterRead" :max-count="1"/>
                 </div>
 				<!-- DOM操作动态显示与隐藏 -->
                 <!-- <div id="avatarShow" ref="avatar" @click="reselect"></div> -->
@@ -60,12 +61,13 @@ import Vue from 'vue';
 import {Field, Button, MessageBox, Toast} from 'mint-ui';
 Vue.component(Field.name, Field);
 Vue.component(Button.name, Button);
-import { Area, Picker, Popup, Image, } from 'vant';
+import { Area, Picker, Popup, Image, Uploader } from 'vant';
 import 'vant/lib/area/style';
 import 'vant/lib/popup/style';
 import 'vant/lib/image/style';
 import 'vant/lib/picker/style';
-Vue.use(Area).use(Popup).use(Image).use(Picker);
+import 'vant/lib/uploader/style';
+Vue.use(Area).use(Popup).use(Image).use(Picker).use(Uploader);
 import areas from './areas';
 import { thistle } from 'color-name';
 export default {
@@ -74,6 +76,7 @@ export default {
             selected: false,
             from: '',
             title: "个人信息修改",
+            fileList: [],
             user_avatar: '',
             identify: "",
             name: "",
@@ -148,28 +151,36 @@ export default {
             // this.user_avatar = this.$store.state.userInfo.community_info.face_image_url;
             // console.log(this.user_avatar);
             console.log(wx.chooseImage, wx.getLocalImgData);
-            wx.chooseImage({
-                count: 1, // 默认9
-                sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-                success: function (res) {
-                    console.log('wx.chooseImage ok');
-                    var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-                    wx.getLocalImgData({
-                        localId: localIds[0], // 图片的localID
-                        success: function (res) {
-                            console.log('wx.getLocalImgData ok');
-                            console.log('123'+res.localData);
-                            console.log(this, _this);
-                            _this.$refs.avatarSelect.style.visibility = 'hidden';
-                            _this.user_avatar = res.localData; // localData是图片的base64数据，可以用img标签显示
-                            //  获取并保存图片base64数据后  通过image 或者元素的background属性展示
-                            // this.$refs.avatar.style.background = 'url('+res.localData+')';
-                            // this.$refs.avatar.style.display = 'block';
-                        }
-                    });
-                }
-            });
+            wx.ready(()=> {
+                wx.chooseImage({
+                    count: 1, // 默认9
+                    sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                    sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                    success: function (res) {
+                        console.log('wx.chooseImage ok');
+                        var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                        // getLocalImgData 接口未配置
+                        wx.getLocalImgData({
+                            localId: localIds[0], // 图片的localId
+                            success: function (res) {
+                                console.log('wx.getLocalImgData ok');
+                                console.log('123'+res.localData);
+                                console.log(this, _this);
+                                _this.$refs.avatarSelect.style.visibility = 'hidden';
+                                _this.user_avatar = res.localData; // localData是图片的base64数据，可以用img标签显示
+                                //  获取并保存图片base64数据后  通过image 或者元素的background属性展示
+                                // this.$refs.avatar.style.background = 'url('+res.localData+')';
+                                // this.$refs.avatar.style.display = 'block';
+                            }
+                        });
+                    }
+                });
+            })
+            
+        },
+        afterRead(file){
+            console.log(file);
+            console.log(this.fileList[0]);
         },
         reselect(){
             MessageBox.confirm('确定要重新选择吗？', '提示').then(action => {
@@ -266,8 +277,7 @@ export default {
         },
         //  提交数据    
         submit(){
-            alert('ok');
-            if(this.phone_num&&this.identify&&this.name&&this.selectedBuild&&this.selectedUnit&&this.selectedGate&&this.user_avatar){
+            if(this.phone_num&&this.identify&&this.name&&this.selectedBuild&&this.selectedUnit&&this.selectedGate&&this.fileList){
                 this.http.post("http://facerke.epplink.net/v1/api/terminal/community/apply?"+this.$store.getters.apiVerifi, {
                 "id_number": this.identify,
                 "phone": this.phone_num,
@@ -278,7 +288,7 @@ export default {
                 "household": this.selectedGate,
                 "role": "01",
                 "pid": "0",
-                "face_image": this.user_avatar
+                "face_image": this.fileList[0].content
                 }).then(res=> {
                     console.log(res.data);
                     console.log(this.selectedBuild, this.selectedUnit, this.selectedGate);
@@ -298,14 +308,28 @@ export default {
     },
     created(){
         // 配置微信sdk
-        console.log(wx, this.$store.state.jssdkConfig);
-        wx.config(this.$store.state.jssdkConfig);
+        this.http.get('http://facerke.epplink.net/officalcount/getToken').then(res=> {
+            console.log(res.data, JSON.parse(res.data.jssdkConfig));
+            wx.config({...JSON.parse(res.data.jssdkConfig),
+                success: res=> { console.log('配置成功:', res) },
+                fail: err=> { console.log('配置失败:', err) },
+                complete: data=> { console.log('执行完成:', data) }
+            });
+        })
+        wx.error(function(res){
+            alert(res);
+        });
+        wx.checkJsApi({
+            jsApiList: ['chooseImage', 'getLocalImgData'],
+            success: res=> {
+                console.log(res);
+            }
+        })
         this.from = this.$route.query.from;
         if(this.from=='uploadInfo'){
             this.title = '完善个人信息',
             this.phone_num = this.$route.query.phone;
             this.showPhone = false;
-            alert(this.showPhone);
         }
     }
 }
@@ -332,6 +356,17 @@ export default {
                 margin-left: 10px;
                 line-height: 50px;
             }
+            /deep/ .van-uploader{
+                left: -72px;
+                .van-uploader__upload{
+                    width: 50px;
+                    height: 50px;
+                }
+                .van-uploader__preview-image{
+                    width: 50px;
+                    height: 50px;
+                }
+            } 
             .avatar_upload{
                 font-size: 50px;
                 color: #09CA51;

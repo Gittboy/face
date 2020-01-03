@@ -75,7 +75,7 @@ export default {
         },
         submit(){
             if(this.phone && this.captcha_code){
-                this.http.post(`/v1/api/terminal/community/signin?${this.$store.getters.apiVerifi}`, 
+                this.http.post(`/v1/api/terminal/community/signin?${this.apiVerifi}`, 
                 {
                     "phone": this.phone,
                     "captcha_code": this.captcha_code
