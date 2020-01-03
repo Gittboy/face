@@ -76,14 +76,17 @@ export default {
             return this.debounce(this.tempopen, 300);
         }
     },
-    created(){
-        console.log('主页加载ok');
+    beforeRouteEnter (to, from, next) {
         this.http.get('http://facerke.epplink.net/officalcount/getToken').then(res=>{
             console.log(res, res.data);
             //  保存验证信息
             this.$store.commit('saveVerification', res.data);
             if(res.data.isSignIn == 'true' ){
-                this.$router.replace('/system');
+                if (res.data.status != 'true') {
+                    this.$router.replace("/submit");
+                }else {
+                    this.$router.replace('/system');
+                }
             }
         })
     }

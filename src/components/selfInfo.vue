@@ -6,7 +6,7 @@
             <div class="info_wrapper">
                 <p v-for="(item, index) in info" :key="index">{{item.key+" "+':'+" "+item.value}}</p>
             </div>
-            <mt-button type="primary" id="setting" size='normal' @click.native="jumpToSeeting">修改信息</mt-button>
+            <!-- <mt-button type="primary" id="setting" size='normal' @click.native="jumpToSeeting">修改信息</mt-button> -->
         </div>
         <router-view name="setting"></router-view>
     </div>

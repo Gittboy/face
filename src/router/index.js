@@ -68,6 +68,11 @@ const routes = [{
             }]
         }]
     },
+    {
+        path: "/submit",
+        component: () =>
+            import ("../views/submit.vue")
+    }
 ]
 
 const router = new VueRouter({

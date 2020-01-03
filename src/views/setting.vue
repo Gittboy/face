@@ -295,7 +295,10 @@ export default {
                     if(res.data.code!=1){
                         Toast(res.data.reason);
                     }else{
-                        Toast("信息提交成功！");
+                        Toast({message: "信息提交成功！", duration: 1500});
+                        setTimeout(()=> {
+                            this.$router.push("/submit");
+                        }, 1000);
                     }
                     // this.$router.replace("/system");
                 }, err=>{
@@ -328,7 +331,7 @@ export default {
     z-index: 100;
     .field{
         text-align: center;
-        padding-top: 15vh;
+        padding-top: 10vh;
         .upload_wrapper{
             vertical-align: middle;
             position: relative;
