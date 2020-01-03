@@ -307,24 +307,6 @@ export default {
         }
     },
     created(){
-        // 配置微信sdk
-        this.http.get('http://facerke.epplink.net/officalcount/getToken').then(res=> {
-            console.log(res.data, JSON.parse(res.data.jssdkConfig));
-            wx.config({...JSON.parse(res.data.jssdkConfig),
-                success: res=> { console.log('配置成功:', res) },
-                fail: err=> { console.log('配置失败:', err) },
-                complete: data=> { console.log('执行完成:', data) }
-            });
-        })
-        wx.error(function(res){
-            alert(res);
-        });
-        wx.checkJsApi({
-            jsApiList: ['chooseImage', 'getLocalImgData'],
-            success: res=> {
-                console.log(res);
-            }
-        })
         this.from = this.$route.query.from;
         if(this.from=='uploadInfo'){
             this.title = '完善个人信息',

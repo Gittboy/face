@@ -82,15 +82,12 @@ export default {
             console.log(res, res.data);
             //  保存验证信息
             this.$store.commit('saveVerification', res.data);
-            //  保存 jssdk 配置信息
-            this.$store.commit('getJssdkConfig', JSON.parse(res.data.jssdkConfig));
-            if(res.data.isSignIn){
+            if(res.data.isSignIn == 'true' ){
                 this.$router.replace('/system');
             }
         })
     }
 }
-//http://facerke.epplink.net/mobile/123
 </script>
 
 <style lang="less" scoped>

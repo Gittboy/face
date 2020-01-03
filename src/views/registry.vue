@@ -51,27 +51,32 @@ export default {
     methods: {
         getVerification(){
             let _this = this;
-            if(this.timer){
-                return ;
-            } else {
-                this.http.get("/v1/api/sendsms?phone="+this.phone).then(res=>{
-                    if(res.data.code!=1){
-                        Toast(res.reason);
-                    }else {
-                        Toast("获取验证码成功");
-                    }
-                });
-                this.timer = setInterval(function(){
-                    _this.text = _this.counter + "秒后刷新";
-                    _this.counter--;
-                    if(_this.counter==0){
-                        clearInterval(_this.timer);
-                        _this.timer = null;
-                        _this.counter=59;
-                        _this.text = '获取验证码';
-                    }
-                }, 1000)
+            if(this.phone){
+                if(this.timer){
+                    return ;
+                } else {
+                    this.http.get("/v1/api/sendsms?phone="+this.phone).then(res=>{
+                        if(res.data.code!=1){
+                            Toast(res.reason);
+                        }else {
+                            Toast("获取验证码成功");
+                        }
+                    });
+                    this.timer = setInterval(function(){
+                        _this.text = _this.counter + "秒后刷新";
+                        _this.counter--;
+                        if(_this.counter==0){
+                            clearInterval(_this.timer);
+                            _this.timer = null;
+                            _this.counter=59;
+                            _this.text = '获取验证码';
+                        }
+                    }, 1000)
+                }
+            }else {
+                Toast("请输入手机号");
             }
+            
         },
         submit(){
             if(this.phone && this.captcha_code){
