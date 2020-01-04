@@ -86,7 +86,7 @@ export default {
             showUnit: false,
             showGate: false,
             // areaList: areas
-            buildInfo: {"unitInfo":[{"id":3,"title":"一单元","parent":33},{"id":4,"title":"二单元","parent":33},{"id":5,"title":"三单元","parent":34},{"id":6,"title":"四单元","parent":34}],"buildingInfo":{"33":"22号楼","34":"23号楼"},"householdInfo":[{"title":"101","id":1,"parent":3},{"title":"102","id":2,"parent":3},{"title":"201","id":3,"parent":3},{"title":"202","id":4,"parent":3},{"title":"101","id":5,"parent":4},{"title":"102","id":6,"parent":4},{"title":"103","id":7,"parent":4},{"title":"201","id":8,"parent":4},{"title":"202","id":9,"parent":4},{"title":"203","id":10,"parent":4},{"title":"301","id":11,"parent":4},{"title":"302","id":12,"parent":4},{"title":"303","id":13,"parent":4},{"title":"101","id":14,"parent":5},{"title":"101","id":15,"parent":6},{"title":"102","id":16,"parent":6},{"title":"201","id":17,"parent":6},{"title":"202","id":18,"parent":6}]},
+            buildInfo: "",
             tempBuild: "",
             selectedBuild: "",
             buildText: "",
@@ -316,6 +316,10 @@ export default {
             this.phone_num = this.$route.query.phone;
             this.showPhone = false;
         }
+        this.http.get("http://facerke.epplink.net/officalcount/getCommunityInfo").then(res=> {
+            this.buildInfo = res.data;
+            console.log(res.data);
+        })
     }
 }
 </script>
