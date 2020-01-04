@@ -1,5 +1,7 @@
 /* 路由跳转后需要覆盖的页面 */
-
+body{
+    margin: 0;
+}
 .new_page {
     position: fixed;
     top: 0;
@@ -8,6 +10,7 @@
     height: 100%;
     background-color: #fff;
     z-index: 100;
+    overflow-y: scroll;
 }
 //  针对于三个选项切换页
 .new_page_tabs{
@@ -29,8 +32,8 @@ ul, li{
     transition: all .2s ease;
 }
 .myInput:focus{
-    border: 1px solid skyblue;
-    box-shadow: 0 0 2px 2px skyblue;
+    border: 1px solid #26a2ff;
+    box-shadow: 0 0 2px 2px #26a2ff;
 }
 .clearfix{
     zoom: 1;
@@ -40,3 +43,9 @@ ul, li{
     display: block;
     clear: both;
 }
+input,textarea {
+    -webkit-appearance: none;
+    /*去除input默认样式*/
+    appearance: none;
+}
+    

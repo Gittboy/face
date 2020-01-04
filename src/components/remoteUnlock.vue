@@ -13,9 +13,12 @@
 
 <script>
 import Vue from 'vue'
-import {Radio, Button, Toast} from 'mint-ui'
+import { Radio, Button } from 'mint-ui'
 Vue.component(Radio.name, Radio)
 Vue.component(Button.name, Button)
+import { Toast } from 'vant';
+import 'vant/lib/toast/style'
+Vue.use(Toast);
 export default {
     data(){
         return {
@@ -29,6 +32,12 @@ export default {
     },
     methods: {
         openLock(){
+            Toast.loading({
+                    message: '开锁中...',
+                    forbidClick: true,
+                    loadingType: 'spinner',
+                    duration: 2500
+            });
             this.http.post("/v1/api/terminal/openlock/direct?"+this.$store.getters.apiVerifi, {
                 "community_locks": this.value
             }).then(res=> {
@@ -38,7 +47,7 @@ export default {
                     Toast('开锁成功！');
                 }
             }, err=> {
-                console.log(err);
+                Toast("网络忙，请重试");
             })
         }
     },
@@ -59,16 +68,19 @@ export default {
     .selects_wrap{
         margin-top: 30vh;
         margin-bottom: 50px;
-				/deep/ .mint-cell-wrapper{
-					margin-top: -1px;
-				}
+            /deep/ .mint-cell:last-child{
+                background: none;
+            }
+            /deep/ .mint-cell-wrapper{
+                margin-top: -1px;
+            }
     }
     .mint-button--large{
         width: 40vw;
         margin-left: 30vw;
     }
     /deep/ .mint-radiolist-label{
-        padding-left: 35vw;
+        padding-left: 32vw;
         text-align: left;
     }
 }

@@ -1,5 +1,5 @@
 <template>
-    <div class="root">
+    <div class="root new_page">
         <div class="login_wrap">
             <myInput :holder="tip" @delivery="receive"/>
             <!-- <mt-field placeholder="请输入开锁码" id="field_id" v-model="tempid"></mt-field> -->
@@ -35,7 +35,6 @@ export default {
             console.log(this.tempid);
         },
         tempopen(){
-            alert('ok');
             this.http.post(`/v1/api/terminal/openlock/code?${this.$store.getters.apiVerifi}`,
             {"auth_code":this.tempid}).then(res=>{
                 if(res.data.code!=1){
@@ -77,44 +76,44 @@ export default {
             return this.debounce(this.tempopen, 300);
         }
     },
-    // created(){
-    //     this.http.get('http://facerke.epplink.net/officalcount/getToken').then(res=>{
-    //         console.log(res, res.data);
-    //         //  保存验证信息
-    //         this.$store.commit('saveVerification', res.data);
-    //         if(res.data.isSignIn == 'true'){
-    //             if (res.data.status != 'true') {
-    //                 this.$router.replace("/submit");
-    //             }else {
-    //                 this.$router.replace('/system');
-    //             }
-    //         }else {
-
-    //         }
-    //     });
-    // },
     created(){
-        let _this = this;
-        let ajax = this.getAjax();
-        ajax.open('get', 'http://facerke.epplink.net/officalcount/getToken', false);
-        ajax.onreadstatechange = function(){
-            if(ajax.readyState == 4 && ajax.status == 200) {
-                // 可以通过通过ajax.responseText和ajax.responseXML来获取返回的数据
-                var info = JSON.parse(ajax.responseText);
-                console.log(ajax.responseText, info);
-                _this.$store.commit('saveVerification', info);
-                if(info.isSignIn == 'true'){
-                    if (info.status != 'true') {
-                        _this.$router.replace("/submit");
-                    }else {
-                        _this.$router.replace('/system');
-                    }
+        this.http.get('http://facerke.epplink.net/officalcount/getToken').then(res=>{
+            console.log(res, res.data);
+            //  保存验证信息
+            this.$store.commit('saveVerification', res.data);
+            if(res.data.isSignIn == 'true'){
+                if (res.data.status != 'true') {
+                    this.$router.replace("/submit");
+                }else {
+                    this.$router.replace('/system');
                 }
             }else {
-                console.log(ajax.readyState, ajax.status);
+
             }
-        }
+        });
     },
+    // created(){
+    //     let _this = this;
+    //     let ajax = this.getAjax();
+    //     ajax.open('get', 'http://facerke.epplink.net/officalcount/getToken', false);
+    //     ajax.onreadstatechange = function(){
+    //         if(ajax.readyState == 4 && ajax.status == 200) {
+    //             // 可以通过通过ajax.responseText和ajax.responseXML来获取返回的数据
+    //             var info = JSON.parse(ajax.responseText);
+    //             console.log(ajax.responseText, info);
+    //             _this.$store.commit('saveVerification', info);
+    //             if(info.isSignIn == 'true'){
+    //                 if (info.status != 'true') {
+    //                     _this.$router.replace("/submit");
+    //                 }else {
+    //                     _this.$router.replace('/system');
+    //                 }
+    //             }
+    //         }else {
+    //             console.log(ajax.readyState, ajax.status);
+    //         }
+    //     }
+    // },
     // beforeRouteEnter (to, from, next) {
     //     next(vm=> {
     //         vm.http.get('http://facerke.epplink.net/officalcount/getToken').then(res=>{
@@ -138,6 +137,7 @@ export default {
     .root{
         display: flex;
         justify-content: center;
+        background-color: #fff;
     }
     .login_wrap{
         flex: 0 1 80%;

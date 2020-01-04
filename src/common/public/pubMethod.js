@@ -45,7 +45,7 @@ function debounce(fn, wait) {
  * 
  * @param {节流的函数} fn 
  * @param {等待的时间周期} wait 
- * 定时器节流
+ * 定时器节流 ????
  */
 function throttle(fn, wait) {
     var timer = null;
