@@ -8,8 +8,7 @@ export default new Vuex.Store({
         // 初始化 从后台获取的全局验证信息
         verification: {},
         // 对象类型需遵循Vue的响应式规则
-        userInfo: {},
-        jssdkConfig: {}
+        userInfo: {}
     },
     getters: {
         // url("/v1/api/terminal/openlock/code")}?user_id={$userId}&community_id={$communityId}&timestamp={$timeStamp}&token={$token}&identity={$identity}
@@ -25,6 +24,9 @@ export default new Vuex.Store({
         },
         getUserInfo(state, userInfo) {
             state.userInfo = {...userInfo };
+        },
+        updateAvatar(state, avatar) {
+            state.userInfo.community_info.face_image_url = avatar;
         }
     },
     actions: {},

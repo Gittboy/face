@@ -5,9 +5,9 @@
                 <mt-button icon="back">返回</mt-button>
             </router-link> -->
             </mt-header>
-
-            <router-view name="tab"></router-view> 
-        
+            <keep-alive>
+                <router-view name="tab"></router-view> 
+            </keep-alive>
         <ul id="navs_wrap">
             <li class="nav_item" v-for="(item, index) in links" :key="index" :data-index="index" @click.capture="changeTab($event)">
                 <router-link :to="item.path" class="text_item">{{item.text}}</router-link>
