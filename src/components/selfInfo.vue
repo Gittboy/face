@@ -46,7 +46,7 @@ export default {
     },
     created(){
 			if(!this.avatar||this.$route.query.from=='modified'){
-				this.info[0].value = this.$store.state.userInfo.community_info.id_number;
+				this.info[0].value = this.$store.state.userInfo.community_info.id_number.split("").splice(8,6,"******").join("");
 				this.info[1].value = this.$store.state.userInfo.community_info.username;
 				this.info[2].value = this.$store.state.userInfo.community_info.community_address;
 				this.avatar = this.$store.state.userInfo.community_info.face_image_url;

@@ -61,4 +61,14 @@ function throttle(fn, wait) {
     }
 }
 
-export { checkRes, debounce, throttle }
+function getAjax() {
+    var ajax;
+    try {
+        ajax = new XMLHttpRequest();
+    } catch (e) {
+        ajax = new ObjectXObject(Microsoft.XMLHTTP);
+    }
+    return ajax;
+}
+
+export { checkRes, debounce, throttle, getAjax }

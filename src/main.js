@@ -13,12 +13,13 @@ Vue.prototype.http = axios
 
 import jq from 'jquery'
 
-import { checkRes, debounce, throttle } from './common/public/pubMethod.js'
+import { checkRes, debounce, throttle, getAjax } from './common/public/pubMethod.js'
 //  在Vue.prototype对象下面注册全局信息
 Object.assign(Vue.prototype, {
     checkRes,
     debounce,
-    throttle
+    throttle,
+    getAjax
 })
 
 // import vant from 'vant-ui'

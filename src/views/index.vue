@@ -77,25 +77,60 @@ export default {
             return this.debounce(this.tempopen, 300);
         }
     },
-    beforeRouteEnter (to, from, next) {
-        /**
-         * 此时Vue实例尚未生成 无法访问this.http
-         */
-        http.get('http://facerke.epplink.net/officalcount/getToken').then(res=>{
-            console.log(res, res.data);
-            //  保存验证信息
-            this.$store.commit('saveVerification', res.data);
-            if(res.data.isSignIn == 'true'){
-                if (res.data.status != 'true') {
-                    next("/submit");
-                }else {
-                    next('/system');
+    // created(){
+    //     this.http.get('http://facerke.epplink.net/officalcount/getToken').then(res=>{
+    //         console.log(res, res.data);
+    //         //  保存验证信息
+    //         this.$store.commit('saveVerification', res.data);
+    //         if(res.data.isSignIn == 'true'){
+    //             if (res.data.status != 'true') {
+    //                 this.$router.replace("/submit");
+    //             }else {
+    //                 this.$router.replace('/system');
+    //             }
+    //         }else {
+
+    //         }
+    //     });
+    // },
+    created(){
+        let _this = this;
+        let ajax = this.getAjax();
+        ajax.open('get', 'http://facerke.epplink.net/officalcount/getToken', false);
+        ajax.onreadstatechange = function(){
+            if(ajax.readyState == 4 && ajax.status == 200) {
+                // 可以通过通过ajax.responseText和ajax.responseXML来获取返回的数据
+                var info = JSON.parse(ajax.responseText);
+                console.log(ajax.responseText, info);
+                _this.$store.commit('saveVerification', info);
+                if(info.isSignIn == 'true'){
+                    if (info.status != 'true') {
+                        _this.$router.replace("/submit");
+                    }else {
+                        _this.$router.replace('/system');
+                    }
                 }
             }else {
-                next();
+                console.log(ajax.readyState, ajax.status);
             }
-        });
-    }
+        }
+    },
+    // beforeRouteEnter (to, from, next) {
+    //     next(vm=> {
+    //         vm.http.get('http://facerke.epplink.net/officalcount/getToken').then(res=>{
+    //             console.log(res, res.data);
+    //             //  保存验证信息
+    //             vm.$store.commit('saveVerification', res.data);
+    //             if(res.data.isSignIn == 'true'){
+    //                 if (res.data.status != 'true') {
+    //                     vm.$router,replace("/submit");
+    //                 }else {
+    //                     vm.$router.replace('/system');
+    //                 }
+    //             }
+    //         });
+    //     })
+    // }
 }
 </script>
 
