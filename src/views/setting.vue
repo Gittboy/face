@@ -142,6 +142,11 @@ export default {
         handleBack(){
             this.$router.go(-1);
         },
+        /**
+         * 微信访问相册与摄像头api localIds
+         * 上传图片 localId => localData
+         * 此api已经放弃使用  无法调用  wx.config($config) =>  jsApiList = [] 配置完了jsApi返回为空数组
+         */
         chooseAvatar(){
             let _this = this;
             // this.$refs.avatarSelect.style.visibility = 'hidden';
@@ -178,6 +183,11 @@ export default {
             })
             
         },
+        /**
+         * 选择完图片后调用 file 为当前选择的文件对象
+         * fileList为已经选择的file 对象集合 
+         * file 对象和content字段 为图片的base64字符串数据
+         */
         afterRead(file){
             console.log(file);
             console.log(this.fileList[0]);

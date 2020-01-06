@@ -25,6 +25,7 @@ const routes = [{
             },
             children: [{
                 path: 'uploadInfo',
+                name: "uploadInfo",
                 meta: {
                     title: "完善个人信息"
                 },
@@ -42,24 +43,28 @@ const routes = [{
         redirect: "/system/tempUnlock",
         children: [{
             path: "remoteUnlock",
+            name: "remoteUnlock",
             components: {
                 tab: () =>
                     import ('../components/remoteUnlock.vue')
             }
         }, {
             path: "tempUnlock",
+            name: "tempUnlock",
             components: {
                 tab: () =>
                     import ('../components/tempUnlock.vue')
             }
         }, {
             path: "selfInfo",
+            name: "selfInfo",
             components: {
                 tab: () =>
                     import ('../components/selfInfo.vue')
             },
             children: [{
                 path: 'setting',
+                name: "setting",
                 components: {
                     setting: () =>
                         import ('../views/setting.vue')

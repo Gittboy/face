@@ -69,10 +69,11 @@ export default {
         }else {
           this.avatar = file.content;
           Toast("更新人脸成功！");
-          this.$store.commit({
-            type: 'updateAvatar',
-            avatar: file.content
-          })
+          //  更新人脸成功后 向vuex 里面保存最新的人脸数据
+          // this.$store.commit({
+          //   type: 'updateAvatar',
+          //   avatar: file.content
+          // })
         }
       }, err=> {
         Toast("更新人脸照片失败！")
